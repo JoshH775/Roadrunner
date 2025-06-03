@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import { useAppState } from "../../StateProvider";
-import { tracks as AllTracks } from "../../tracks";
-import type { Track } from "../../../types";
-import Button from "../Button";
+import { useAppState } from "../StateProvider";
+import { tracks as AllTracks } from "../tracks";
+import type { Track } from "../../types";
+import Button from "./Button";
 import { ChevronsUpDown, MapPin, Search } from "lucide-react";
 import { useCombobox } from "downshift";
 import { motion, AnimatePresence } from "motion/react";
