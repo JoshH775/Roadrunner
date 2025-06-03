@@ -2,6 +2,7 @@ import { Filter } from "lucide-react";
 import Badge from "./Badge";
 import CarFilter from "./Filters/CarFilter";
 import ClassFilter from "./Filters/ClassFilter";
+import ModificationsFilter from "./Filters/ModificationsFilter";
 
 export default function FilterBar() {
     return (
@@ -16,6 +17,7 @@ export default function FilterBar() {
             <div id="filters" className="flex flex-col lg:flex-row w-full gap-4  items-center">
                 <CarFilter />
                 <ClassFilter />
+                <ModificationsFilter />
             </div>
 
         </div>
