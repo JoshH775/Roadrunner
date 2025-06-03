@@ -1,7 +1,7 @@
 import { MapPin, Timer, Route } from "lucide-react";
 import Badge from "./Badge";
 import { useAppState } from "../StateProvider";
-import  TrackSelector  from "./Filters/TrackSelector";
+import  TrackSelector  from "./TrackSelector";
 
 export default function Trackbar() {
     

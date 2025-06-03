@@ -3,6 +3,13 @@ import type { Car, LapTime, ProtoLapTime, Track, User } from "../types";
 import { tracks } from "./tracks";
 import { supabase } from "./supabase";
 
+interface FilterType {
+    carSearch: string;
+    carClass: 'all' | 'X' | 'S2' | 'S1' | 'A' | 'B' | 'C' | 'D';
+    modifications: 'all' | 'engine' | 'drivetrain' | 'both' | 'stock';
+}
+
+
 type State = {
     user: User | null;
     activeTrack: Track;
@@ -10,9 +17,11 @@ type State = {
     lapTimes: LapTime[]
     cars: Car[]
     loading: boolean;
+    filters: FilterType
     setUser: (user: User) => void;
     setActiveTrack: (track: Track) => void;
     setSelectedTabUserId: (userId: number) => void;
+    setFilters: (filters: Partial<FilterType>) => void;
 
     addLapTime: (lapTime: ProtoLapTime) => void;
     deleteLapTime: (lapTimeId: number) => void;
@@ -30,6 +39,11 @@ export const useAppState = create<State>((set, get) => ({
     lapTimes: [],
     cars: [],
     loading: false,
+    filters: {
+        carSearch: '',
+        carClass: 'all',
+        modifications: 'all',
+    },
     setUser: (user) => set({ user }),
     setActiveTrack: (track) => set({ activeTrack: track }),
     setSelectedTabUserId: (userId) => set({ selectedTabUserId: userId }),
@@ -49,6 +63,7 @@ export const useAppState = create<State>((set, get) => ({
     set({ loading: false });
 
     },
+    
     fetchCars: async () => {
         try {
             set({ loading: true });
@@ -87,4 +102,10 @@ export const useAppState = create<State>((set, get) => ({
         set({ loading: false });
     },
     deleteLapTime: () => {},
-    }))
+    setFilters: (filters: Partial<FilterType>) => set((state) => ({
+        filters: {
+            ...state.filters,
+            ...filters,
+        }
+    })),
+}))
