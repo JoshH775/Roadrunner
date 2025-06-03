@@ -61,7 +61,7 @@ export default function TrackSelector() {
       </Button>
       <AnimatePresence>
       {isOpen && <motion.div
-        className="bg-white  rounded-md absolute py-2 mt-1 z-10 overflow-scroll w-full  shadow-2xl"
+        className="bg-white rounded-md absolute mt-1 z-10 overflow-scroll w-full shadow-2xl"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}

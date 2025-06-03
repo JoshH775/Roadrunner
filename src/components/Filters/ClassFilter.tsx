@@ -29,12 +29,12 @@ export default function ClassFilter() {
 
         return (
             <div className="relative lg:w-1/3 w-full">
-            <label {...getLabelProps()} className="font-semibold flex"><Award className="mr-2"/>Class Filter</label>
+            <label {...getLabelProps()} className="font-semibold flex"><Award className="mr-2 w-4"/>Class Filter</label>
             <Button {...getToggleButtonProps()} className="w-full flex items-center justify-between border !font-normal mt-1 border-gray-300  bg-white" icon={<ChevronsUpDown  />}>
                 {selectedItem ? selectedItem.label : 'Select Class'}
              </Button>
              <AnimatePresence>
-             {isOpen && <motion.div {...getMenuProps()} className="absolute z-10 bg-white border w-full border-gray-300 rounded-md shadow-lg mt-1" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.15, ease: "easeInOut" }}>
+             {isOpen && <motion.div {...getMenuProps()} className="overscroll-contain absolute z-10 bg-white border w-full border-gray-300 rounded-md shadow-lg mt-1 max-h-45 overflow-y-scroll" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.15, ease: "easeInOut" }}>
                 {classes.map((item, index) => (
                     <div
                         key={`${item.name}-${index}`}
