@@ -1,5 +1,5 @@
 
-import FilterBar from './components/Filters/FilterBar'
+import FilterBar from './components/FilterBar'
 import Header from './components/Header'
 import Trackbar from './components/Trackbar'
 import { useAppState } from './StateProvider'
