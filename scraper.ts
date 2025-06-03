@@ -1,12 +1,7 @@
 import { load } from "cheerio";
-import { supabase } from "./supabase";
-
-type Car = {
-id: number;
-  name: string;
-  year: number;
-  pi: number;
-};
+import { supabase } from "./src/supabase";
+import { Car } from "./types";
+const cars: Car[] = []
 
 async function scrapeCars() {
   console.log("Starting scraper...");
@@ -24,8 +19,6 @@ async function scrapeCars() {
     const table = $("table.table.sortable").first();
 
     const rows = table.find("tbody tr");
-
-    const cars: Car[] = [];
 
     rows.each((index, row) => {
       if (index === 0) return; // Limit to first 5 rows for demonstration

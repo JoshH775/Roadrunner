@@ -8,7 +8,15 @@ export type Car = {
 export type Track = {
     id: number;
     name: string;
+    type: "circuit" | "sprint";
     length: number; // Length in miles
+}
+
+export type User = {
+    id: number;
+    username: string;
+    friendCode: string;
+    friends: User[];
 }
 
 export type LapTime = {
