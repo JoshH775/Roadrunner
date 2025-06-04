@@ -1,5 +1,5 @@
 import { useSelect } from "downshift"
-import Button from "../Button";
+import Button from "../UI/Button";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronsUpDown, Component } from "lucide-react";
 import { useAppState } from "../../StateProvider";

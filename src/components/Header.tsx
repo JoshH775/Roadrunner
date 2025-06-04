@@ -1,5 +1,5 @@
 import { PersonStanding } from "lucide-react";
-import Button from "./Button";
+import Button from "./UI/Button";
 
 export default function Header() {
   return (

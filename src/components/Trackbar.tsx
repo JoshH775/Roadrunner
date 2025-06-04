@@ -1,5 +1,5 @@
 import { MapPin, Timer, Route } from "lucide-react";
-import Badge from "./Badge";
+import Badge from "./UI/Badge";
 import { useAppState } from "../StateProvider";
 import  TrackSelector  from "./TrackSelector";
 

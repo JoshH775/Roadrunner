@@ -1,6 +1,6 @@
 import PI from "../PI";
 import { useSelect } from "downshift";
-import Button from "../Button";
+import Button from "../UI/Button";
 import { Award, ChevronsUpDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
