@@ -15,6 +15,7 @@ type ModalProps = {
   title: string;
   children: React.ReactNode;
   actions?: ModalAction[];
+  classname?: string;
 };
 
 function ActionButton({ action }: { action: ModalAction }) {
@@ -45,6 +46,7 @@ export default function Modal({
   children,
   title,
   actions = [],
+  classname = "",
 }: ModalProps) {
   return createPortal(
     <AnimatePresence>
@@ -57,9 +59,9 @@ export default function Modal({
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
             role="dialog"
-            className="relative bg-white lg:rounded-lg shadow-lg p-6 max-w-md w-full"
+            className={"relative bg-white lg:rounded-lg shadow-lg p-6 max-w-md w-full " + classname}
           >
-            <h2 className="text-xl font-bold mb-2 flex justify-between items-center">
+            <h2 className="text-xl font-bold mb-2 flex justify-between items-center text-g">
               {title}{" "}
               <button
                 className="cursor-pointer text-gray-500 hover:text-gray-700"
