@@ -10,7 +10,7 @@ export default function CarFilter() {
     };
 
     return (
-    <div className="flex flex-col lg:w-1/3 w-full">
+    <div className="flex flex-col w-full">
         <label className="font-semibold flex">
             <Car className="mr-2 w-4" />
             Search Cars

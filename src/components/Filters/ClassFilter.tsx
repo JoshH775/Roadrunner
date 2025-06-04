@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 export default function ClassFilter() {
     const classes = [
         { name: 'all', label: 'All Classes', pi: 0 },
+        
         { name: 'X',  label: 'X Class', pi: 999},
         { name: 'S2', label: 'S2 Class', pi: 998},
         {name: 'S1', label: 'S1 Class', pi: 900},
@@ -28,7 +29,7 @@ export default function ClassFilter() {
         })
 
         return (
-            <div className="relative lg:w-1/3 w-full">
+            <div className="relative w-full">
             <label {...getLabelProps()} className="font-semibold flex"><Award className="mr-2 w-4"/>Class Filter</label>
             <Button {...getToggleButtonProps()} className="w-full flex items-center justify-between border !font-normal mt-1 border-gray-300  bg-white" icon={<ChevronsUpDown  />}>
                 {selectedItem ? selectedItem.label : 'Select Class'}

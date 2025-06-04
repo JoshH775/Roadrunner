@@ -27,7 +27,7 @@ export default function ModificationsFilter() {
     })
 
     return (
-        <div className="relative lg:w-1/3 w-full">
+        <div className="relative w-full">
             <label {...getLabelProps()} className="font-semibold flex"><Component className="mr-2 w-4" />Modifications</label>
             <Button {...getToggleButtonProps()} className="w-full flex items-center justify-between border !font-normal mt-1 border-gray-300  bg-white" icon={<ChevronsUpDown />} >
                 {filters.modifications === 'all' ? 'All Modifications' : options.find(option => option.value === filters.modifications)?.label || 'Select Modification'}
