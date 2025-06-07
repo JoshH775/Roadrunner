@@ -3,8 +3,20 @@ import Badge from "./UI/Badge";
 import CarFilter from "./Filters/CarFilter";
 import ClassFilter from "./Filters/ClassFilter";
 import ModificationsFilter from "./Filters/ModificationsFilter";
+import { useAppState } from "../StateProvider";
+import type { ModificationOption, PIClass } from "../../types";
 
 export default function FilterBar() {
+
+    const { setFilters } = useAppState()
+
+    const onModificationSelect = (modification: ModificationOption) => {
+        setFilters({ modifications: modification });
+    }
+
+    const onClassSelect = (carClass: PIClass) => {
+        setFilters({ carClass });
+    }
     return (
         <div className="shadow-2xl p-6 flex flex-col border border-gray-300 rounded-lg w-full gap-4 ">
             <div className="flex items-center gap-3">
@@ -16,8 +28,8 @@ export default function FilterBar() {
             </div>
             <div id="filters" className="flex flex-col lg:flex-row w-full gap-4  items-center">
                 <CarFilter />
-                <ClassFilter />
-                <ModificationsFilter />
+                <ClassFilter onSelect={onClassSelect}/>
+                <ModificationsFilter onSelect={onModificationSelect} />
             </div>
 
         </div>

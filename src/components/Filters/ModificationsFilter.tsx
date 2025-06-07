@@ -2,39 +2,44 @@ import { useSelect } from "downshift"
 import Button from "../UI/Button";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronsUpDown, Component } from "lucide-react";
-import { useAppState } from "../../StateProvider";
+import type { ModificationOption } from "../../../types";
 
-export default function ModificationsFilter() {
+type Props = {
+    onSelect: (modification: ModificationOption) => void;
+    omitAll?: boolean;
+}
 
-    const {filters, setFilters} = useAppState()
+export default function ModificationsFilter({ onSelect, omitAll = false }: Props) {
 
-    const options: { value: 'all' | 'engine' | 'drivetrain' | 'both' | 'stock', label: string }[] = [
-        { value: 'all', label: 'All Modifications'},
+    const options: { value: ModificationOption, label: string }[] = [
         { value: 'engine', label: 'Engine Swap'},
         { value: 'drivetrain', label: 'Drivetrain Swap'},
         { value: 'both', label: 'Both'},
         { value: 'stock', label: 'Stock'}
     ]
 
-    const { isOpen, getItemProps, getMenuProps, getLabelProps, getToggleButtonProps }  = useSelect({
+    if (!omitAll) {
+        options.unshift({ value: 'all', label: 'All Modifications' })
+    }
+
+    const { isOpen, getItemProps, getMenuProps, getLabelProps, getToggleButtonProps, selectedItem }  = useSelect({
         items: options,
         itemToString: (item) => item ? item.label : '',
-        onSelectedItemChange: ({ selectedItem }) => {
-            if (selectedItem) {
-                setFilters({modifications: selectedItem.value})
-            }
-        },
+        onSelectedItemChange: ({ selectedItem }) => onSelect(selectedItem?.value || 'stock'),
+
     })
+
+    const menuProps = getMenuProps({}, { suppressRefError: true });
 
     return (
         <div className="relative w-full">
             <label {...getLabelProps()} className="font-semibold flex"><Component className="mr-2 w-4" />Modifications</label>
-            <Button {...getToggleButtonProps()} className="w-full flex items-center justify-between border !font-normal mt-1 border-gray-300  bg-white" icon={<ChevronsUpDown />} >
-                {filters.modifications === 'all' ? 'All Modifications' : options.find(option => option.value === filters.modifications)?.label || 'Select Modification'}
+            <Button {...getToggleButtonProps({type: "button"})} className="w-full flex items-center justify-between border !font-normal mt-1 border-gray-300  bg-white" icon={<ChevronsUpDown />} >
+                {selectedItem && selectedItem.label ? selectedItem.label : 'Select Modification'}
             </Button>
             <AnimatePresence>
                 {isOpen && (
-                    <motion.div {...getMenuProps()} className="absolute z-10 bg-white border w-full border-gray-300 rounded-md shadow-lg mt-1"
+                    <motion.div {...menuProps} className="absolute z-10 bg-white border w-full border-gray-300 rounded-md shadow-lg mt-1"
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}

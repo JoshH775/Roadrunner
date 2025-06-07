@@ -21,7 +21,6 @@ export default function TrackSelector() {
     getItemProps,
     getInputProps,
     getToggleButtonProps,
-    openMenu,
   } = useCombobox({
     items: tracks,
     onInputValueChange: ({ inputValue }) => {
@@ -50,12 +49,17 @@ export default function TrackSelector() {
     },
   });
 
+const inputProps = getInputProps({ref: inputRef}, { suppressRefError: true });
+
+const menuProps = getMenuProps({}, { suppressRefError: true });
+
+
   return (
-    <div className="relative lg:w-1/5 w-full shadow-2xl">
+    <div className="relative shadow-2xl !min-w-68">
       <Button
         className="border border-gray-300 text-gray-500 bg-white w-full flex items-center justify-between"
         icon={<ChevronsUpDown className="w-5" />}
-        {...getToggleButtonProps()}
+        {...getToggleButtonProps({type: "button"})}
       >
         {buttonText}
       </Button>
@@ -70,20 +74,13 @@ export default function TrackSelector() {
         <span className="flex items-center justify-center gap-2 border-b border-gray-300 px-2">
           <Search className="text-gray-300 w-5" />
           <input
-            ref={inputRef}
             placeholder="Search for a track..."
             className=" p-2 rounded outline-none w-full "
-            {...getInputProps({
-              onFocus: () => {
-                if (inputValue === "") {
-                  openMenu();
-                }
-              },
-            })}
+            {...inputProps}
 
           />
         </span>
-        <ul className="max-h-60 overflow-y-auto" {...getMenuProps()}>
+        <ul className="max-h-60 overflow-y-auto" {...menuProps}>
           {isOpen &&
             tracks.length > 0 &&
             tracks.map((track, index) => (
