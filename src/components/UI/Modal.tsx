@@ -11,8 +11,8 @@ interface ModalAction {
 
 type ModalProps = {
   isOpen: boolean;
-  onClose: () => void;
-  title: string;
+  onClose?: () => void;
+  title?: string;
   children: React.ReactNode;
   actions?: ModalAction[];
   classname?: string;
@@ -59,18 +59,18 @@ export default function Modal({
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
             role="dialog"
-            className={"relative bg-white lg:rounded-lg shadow-lg p-6 max-w-md w-full " + classname}
+            className={"relative bg-white lg:rounded-lg shadow-lg p-6 max-w-lg w-full " + classname}
           >
-            <h2 className="text-xl font-bold mb-2 flex justify-between items-center text-g">
+            {title && <h2 className="text-xl font-bold mb-2 flex justify-between items-center text-g">
               {title}{" "}
-              <button
+              {onClose && <button
                 className="cursor-pointer text-gray-500 hover:text-gray-700"
                 onClick={onClose}
                 aria-label="Close Modal"
               >
                 <XIcon className="w-4" />
-              </button>
-            </h2>
+              </button>}
+            </h2>}
             {children}
             {actions.length > 0 && (
               <div className="mt-6 flex justify-end space-x-2">
