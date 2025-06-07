@@ -1,12 +1,12 @@
 import { create } from "zustand";
-import type { Car, LapTime, ProtoLapTime, Track, User } from "../types";
+import type { Car, LapTime, ModificationOption, PIClass, ProtoLapTime, Track, User } from "../types";
 import { tracks } from "./tracks";
 import { supabase } from "./supabase";
 
 interface FilterType {
     carSearch: string;
-    carClass: 'all' | 'X' | 'S2' | 'S1' | 'A' | 'B' | 'C' | 'D';
-    modifications: 'all' | 'engine' | 'drivetrain' | 'both' | 'stock';
+    carClass: PIClass
+    modifications: ModificationOption
 }
 
 
@@ -28,11 +28,15 @@ type State = {
 
     fetchTimesForUser: (userId: number) => Promise<void>;
     fetchCars: () => Promise<void>;
+    logout: () => Promise<void>;
 }
 
 
 
-export const useAppState = create<State>((set, get) => ({
+export const useAppState = create<State>((set, get) => {
+    
+
+    return {
     user: null,
     activeTrack: tracks[0],
     selectedTabUserId: null,
@@ -41,7 +45,7 @@ export const useAppState = create<State>((set, get) => ({
     loading: false,
     filters: {
         carSearch: '',
-        carClass: 'all',
+        carClass: { class: 'all', color: '', min: 0, max: 9999 }, // Default to 'all' class
         modifications: 'all',
     },
     setUser: (user) => set({ user }),
@@ -108,4 +112,13 @@ export const useAppState = create<State>((set, get) => ({
             ...filters,
         }
     })),
-}))
+
+    logout: async () => {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+            console.error("Error signing out:", error);
+        } else {
+            set({ user: null, lapTimes: [] });
+        }
+    }
+}});
