@@ -1,24 +1,24 @@
-export default function Button({
-    children,
-    onClick,
-    className = '',
-    icon,
-    ...buttonProps
-}: {
+import React, { forwardRef } from 'react';
+
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     children: React.ReactNode;
-    onClick?: () => void;
-    className?: string;
     icon?: React.ReactNode;
-    buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
-}) {
-    return (
-        <button
-            onClick={onClick}
-            className={`flex gap-2 items-center cursor-pointer justify-between font-semibold px-4 py-2 h-fit rounded-md transition ${className}`}
-            {...buttonProps}
-        >
-            {children}
-            {icon}
-        </button>
-    );
-}
+};
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+    ({ children, onClick, className = '', icon, ...rest }, ref) => {
+        return (
+            <button
+                ref={ref}
+                onClick={onClick}
+                className={`flex gap-2 items-center cursor-pointer justify-between font-semibold px-4 py-2 h-fit rounded-md transition ${rest.disabled ? 'cursor-not-allowed' : ''} ${className}`}
+                {...rest}
+            >
+                {children}
+                {icon}
+            </button>
+        );
+    }
+);
+
+export default Button;
