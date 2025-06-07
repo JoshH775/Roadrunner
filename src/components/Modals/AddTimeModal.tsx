@@ -1,17 +1,31 @@
+import { useState } from "react";
 import ClassFilter from "../Filters/ClassFilter";
+import ModificationsFilter from "../Filters/ModificationsFilter";
 import TrackSelector from "../TrackSelector";
 import Modal from "../UI/Modal";
+import type { LapTime } from "../../../types";
 
 export default function AddTimeModal({ isOpen, onClose }: {
     isOpen: boolean;
     onClose: () => void;
 }) {
+    
+    const [lapTime, setLapTime] = useState<LapTime>({
+        id: "",
+        time: "",
+        classId: "",
+        modifications: [],
+        trackId: "",
+        date: new Date().toISOString(),
+        userId: ""
+    });
+
     return (
         <Modal
             isOpen={isOpen}
             onClose={onClose}
             title="Add New Lap Time"
-            classname="flex flex-col gap-4"
+            classname="flex flex-col"
             actions={[
                 {
                     label: "Save",
@@ -31,8 +45,8 @@ export default function AddTimeModal({ isOpen, onClose }: {
         >
                 <p className="text-gray-600">Record your latest lap time here</p>
                 <form className="grid grid-cols-2 grid-rows-2 gap-4">
-                    <TrackSelector />
                     <ClassFilter />
+                    <ModificationsFilter />
                 </form>
         </Modal>
     );
