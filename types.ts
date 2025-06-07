@@ -16,7 +16,7 @@ export type User = {
     id: number;
     username: string;
     friendCode: string;
-    friends: User[];
+    friends: { id: number; username: string }[];
 }
 
 export type LapTime = {
@@ -32,6 +32,9 @@ export type LapTime = {
     flyingLap: boolean;
 }
 
+export type ModificationOption = 'all' | 'engine' | 'drivetrain' | 'both' | 'stock';
+
+
 export type ProtoLapTime = Omit<LapTime, "id">;
 
 export const piColors = {
@@ -44,7 +47,14 @@ export const piColors = {
     X: "#19A83C",
   };
 
-export const piRanges = [
+export type PIClass = {
+    class: string;
+    color: string;
+    min: number;
+    max: number;
+}
+
+export const piRanges: PIClass[] = [
     { min: 100, max: 500, class: "D", color: piColors["D"] },
     { min: 501, max: 600, class: "C", color: piColors["C"] },
     { min: 601, max: 700, class: "B", color: piColors["B"] },
@@ -54,3 +64,13 @@ export const piRanges = [
     { min: 999, max: 999, class: "X", color: piColors["X"] },
   ];
 
+
+  export type DefaultModalProps = {
+    isOpen: boolean;
+    onClose?: () => void;
+  }
+
+export type DBResponse<T> = {
+  data: T | null;
+  error?: string;
+};
