@@ -12,10 +12,10 @@ type Props = {
 export default function ModificationsFilter({ onSelect, omitAll = false }: Props) {
 
     const options: { value: ModificationOption, label: string }[] = [
+        { value: 'stock', label: 'Stock'},
         { value: 'engine', label: 'Engine Swap'},
         { value: 'drivetrain', label: 'Drivetrain Swap'},
-        { value: 'both', label: 'Both'},
-        { value: 'stock', label: 'Stock'}
+        { value: 'both', label: 'Both'}
     ]
 
     if (!omitAll) {
@@ -26,6 +26,7 @@ export default function ModificationsFilter({ onSelect, omitAll = false }: Props
         items: options,
         itemToString: (item) => item ? item.label : '',
         onSelectedItemChange: ({ selectedItem }) => onSelect(selectedItem?.value || 'stock'),
+        initialSelectedItem: omitAll ? options[0] : null
 
     })
 
