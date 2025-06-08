@@ -2,12 +2,12 @@ import { AnimatePresence, motion } from "motion/react";
 import { createPortal } from "react-dom";
 import Button from "./Button";
 import { XIcon } from "lucide-react";
+import type { ButtonHTMLAttributes } from "react";
 
-interface ModalAction {
+type ModalAction =  {
   label: string;
-  onClick: () => void;
   variant?: "default" | "danger" | "primary";
-}
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 type ModalProps = {
   isOpen: boolean;
@@ -33,7 +33,7 @@ function ActionButton({ action }: { action: ModalAction }) {
       className={`${baseClasses} ${
         variantClasses[action.variant || "default"]
       }`}
-      onClick={action.onClick}
+      {...action}
     >
       {action.label}
     </Button>
