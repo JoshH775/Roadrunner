@@ -47,6 +47,7 @@ export default function AddTimeModal({
 
   const carRef = useRef<HTMLButtonElement>(null);
   const piRef = useRef<HTMLInputElement>(null);
+  const timeInputRef = useRef<HTMLDivElement>(null);
 
   const onTrackSelect = (selectedTrack: Track) => {
     setTrack(selectedTrack);
@@ -55,7 +56,11 @@ export default function AddTimeModal({
 
   const onCarSelect = (selectedCar: Car) => {
     setCar(selectedCar);
-    setLapTime((prev) => ({ ...prev, carId: selectedCar.id }));
+    setLapTime((prev) => ({
+      ...prev,
+      carId: selectedCar.id,
+      pi: selectedCar.pi,
+    }));
   };
 
   const onSubmit = (e: React.FormEvent) => {
@@ -78,11 +83,14 @@ export default function AddTimeModal({
 
     if (minutes <= 0 && seconds <= 0) {
       toast.error("Minutes and seconds cannnot both be zero.");
+      timeInputRef.current?.focus();
       return;
     }
 
     if (minutes < 0 || seconds < 0 || milliseconds < 0) {
       toast.error("Time values cannot be negative.");
+      timeInputRef.current?.focus();
+
       return;
     }
 
@@ -130,32 +138,30 @@ export default function AddTimeModal({
     >
       <p className="text-gray-600 mb-2">Record your latest lap time here</p>
       <form id="add-lap-time-form" onSubmit={onSubmit} noValidate>
+        <div className="w-full h-full flex flex-col items-between col-span-2 mb-2">
+          <label className="font-semibold mb-1 flex text-sm">
+            <CarIcon className="w-4 mr-2" />
+            Car
+          </label>
+          <CarCombobox
+            onSelect={onCarSelect}
+            renderButton={({ getToggleButtonProps }) => (
+              <Button
+                className="w-full flex items-center justify-between border border-gray-300 !font-normal truncate !overflow-elipsis focus:ring-2 focus:ring-red-500"
+                type="button"
+                ref={carRef}
+                icon={<ChevronsUpDown className="w-5" />}
+                {...getToggleButtonProps()}
+              >
+                <span className="truncate whitespace-nowrap overflow-hidden w-full text-left">
+                  {car ? car.name : "Select Car"}
+                </span>
+              </Button>
+            )}
+          />
+        </div>
 
-      <div className="w-full h-full flex flex-col items-between col-span-2 mb-2">
-            <label className="font-semibold mb-1 flex text-sm">
-              <CarIcon className="w-4 mr-2" />
-              Car
-            </label>
-            <CarCombobox
-              onSelect={onCarSelect}
-              renderButton={({ getToggleButtonProps }) => (
-                <Button
-                  className="w-full flex items-center justify-between border border-gray-300 !font-normal truncate !overflow-elipsis focus:ring-2 focus:ring-red-500"
-                  type="button"
-                  ref={carRef}
-                  icon={<ChevronsUpDown className="w-5" />}
-                  {...getToggleButtonProps()}
-                >
-                  <span className="truncate whitespace-nowrap overflow-hidden w-full text-left">
-                    {car ? car.name : "Select Car"}
-                  </span>
-                </Button>
-              )}
-            />
-          </div>
-
-
-        <div className="grid grid-cols-2 grid-rows-2 lg:gap-4 gap-2 place-items-center">
+        <div className="grid grid-cols-2 grid-rows-2 lg:gap-3 gap-2 place-items-center">
           <div className="w-full h-full flex flex-col items-between col-span-2 lg:col-span-1">
             <label className="font-semibold mb-1 flex text-sm">
               <Route className="w-4 mr-2" />
@@ -182,7 +188,11 @@ export default function AddTimeModal({
               <Timer className="w-4 mr-2" />
               Lap Time
             </label>
-            <div className="flex items-center space-x-1.5 lg:justify-start justify-between">
+            <div
+              ref={timeInputRef}
+              className="flex items-center space-x-1.5 lg:justify-start justify-between focus:ring-2 focus:ring-red-500 rounded-md p-0.5"
+              tabIndex={-1}
+            >
               <input
                 type="number"
                 ref={minutesRef}
@@ -211,8 +221,6 @@ export default function AddTimeModal({
               />
             </div>
           </div>
-
-          
 
           <div className="w-full h-full flex flex-col items-between">
             <label className="font-semibold mb-1 flex text-sm">
@@ -254,9 +262,61 @@ export default function AddTimeModal({
               placeholder="Enter Performance Index (PI)"
             />
           </div>
+        </div>
 
-
-
+        <div className="w-full h-full flex flex-col items-between mt-2">
+          <label className="font-semibold mb-1 flex text-sm">
+            Modifications & Settings
+          </label>
+          <div className="flex flex-col gap-2">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={lapTime.engineSwap}
+                onChange={(e) =>
+                  setLapTime((prev) => ({
+                    ...prev,
+                    engineSwap: e.target.checked,
+                  }))
+                }
+                className="w-5 h-5 rounded focus:ring-2 focus:ring-red-500 accent-red-500"
+                title="Engine Swap"
+              />
+              <span className="font-semibold text-sm">Engine Swap</span>
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={lapTime.drivetrainSwap}
+                onChange={(e) =>
+                  setLapTime((prev) => ({
+                    ...prev,
+                    drivetrainSwap: e.target.checked,
+                  }))
+                }
+                className="w-5 h-5 rounded focus:ring-2 focus:ring-red-500 accent-red-500"
+                title="Drivetrain Swap"
+              />
+              <span className="font-semibold text-sm">Drivetrain Swap</span>
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={lapTime.flyingLap}
+                onChange={(e) =>
+                  setLapTime((prev) => ({
+                    ...prev,
+                    flyingLap: e.target.checked,
+                  }))
+                }
+                className="w-5 h-5 rounded focus:ring-2 focus:ring-red-500 accent-red-500"
+                title="Flying Lap"
+              />
+              <span className="font-semibold text-sm">
+                Flying Lap (rolling start)
+              </span>
+            </label>
+          </div>
         </div>
       </form>
     </Modal>
