@@ -1,17 +1,21 @@
 import { useRef, useState } from "react";
 import Modal from "../UI/Modal";
-import {
-    type Car,
-  type LapTime,
-  type Track,
-} from "../../../types";
+import { type Car, type LapTime, type Track } from "../../../types";
 import TrackCombobox from "../TrackCombobox";
 import Button from "../UI/Button";
-import { Calendar, CarIcon, ChevronsUpDown, DecimalsArrowRight, Route, Timer } from "lucide-react";
+import {
+  Calendar,
+  CarIcon,
+  ChevronsUpDown,
+  DecimalsArrowRight,
+  Route,
+  Timer,
+} from "lucide-react";
 import CarCombobox from "../CarCombobox";
 import { useAppState } from "../../StateProvider";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
+import toast from "react-hot-toast";
 dayjs.extend(duration);
 
 export default function AddTimeModal({
@@ -21,12 +25,11 @@ export default function AddTimeModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
-
-    const { activeTrack, user } = useAppState();
+  const { activeTrack, user } = useAppState();
 
   const [track, setTrack] = useState<Track>(activeTrack);
   const [car, setCar] = useState<Car | null>(null);
-  const [lapTime, setLapTime] = useState<Omit<LapTime, 'id'>>({
+  const [lapTime, setLapTime] = useState<Omit<LapTime, "id">>({
     time: 0,
     pi: 100,
     carId: car?.id || 0,
@@ -38,10 +41,12 @@ export default function AddTimeModal({
     flyingLap: false,
   });
 
-
   const minutesRef = useRef<HTMLInputElement>(null);
   const secondsRef = useRef<HTMLInputElement>(null);
   const millisecondsRef = useRef<HTMLInputElement>(null);
+
+  const carRef = useRef<HTMLButtonElement>(null);
+  const piRef = useRef<HTMLInputElement>(null);
 
   const onTrackSelect = (selectedTrack: Track) => {
     setTrack(selectedTrack);
@@ -56,35 +61,52 @@ export default function AddTimeModal({
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    minutesRef.current?.setCustomValidity("");
-    
+    if (!car || lapTime.carId === 0) {
+      toast.error("Please select a car.");
+      carRef.current?.focus();
+      return;
+    }
+
+    if (!track || lapTime.trackId === 0) {
+      toast.error("Please select a track.");
+      return;
+    }
+
     const minutes = Number(minutesRef.current?.value) || 0;
     const seconds = Number(secondsRef.current?.value) || 0;
     const milliseconds = Number(millisecondsRef.current?.value) || 0;
 
-    console.log("Lap Time Input:", {
-      minutes,
-      seconds,
-      milliseconds,
-    });
-
-    if (minutes === 0 && seconds === 0) {
-      console.log('here')
-      minutesRef.current?.setCustomValidity("Minutes and seconds cannot both be zero.");
-      minutesRef.current?.reportValidity();
+    if (minutes <= 0 && seconds <= 0) {
+      toast.error("Minutes and seconds cannnot both be zero.");
       return;
-    } 
+    }
 
-    const totalMilliseconds = (minutes * 60 + seconds) * 1000 + milliseconds;
+    if (minutes < 0 || seconds < 0 || milliseconds < 0) {
+      toast.error("Time values cannot be negative.");
+      return;
+    }
 
-    const fullLapTime = {
+    if (lapTime.pi < 100 || lapTime.pi > 999) {
+      toast.error("Performance Index (PI) must be between 100 and 999.");
+      piRef.current?.focus();
+      return;
+    }
+
+    const totalTime = dayjs
+      .duration({
+        minutes,
+        seconds,
+        milliseconds,
+      })
+      .asMilliseconds();
+
+    const finalLapTime = {
       ...lapTime,
-      time: totalMilliseconds,
+      time: totalTime,
     };
 
-    console.log("Submitting lap time:", fullLapTime);
-    onClose();
-  }
+    console.log("Submitting Lap Time:", finalLapTime);
+  };
 
   return (
     <Modal
@@ -107,126 +129,136 @@ export default function AddTimeModal({
       ]}
     >
       <p className="text-gray-600 mb-2">Record your latest lap time here</p>
-      <form id="add-lap-time-form" onSubmit={onSubmit}>
+      <form id="add-lap-time-form" onSubmit={onSubmit} noValidate>
 
-        <div className="grid grid-cols-2 grid-rows-2 lg:gap-4 gap-2 place-items-center">
-        <div className="w-full h-full flex flex-col items-between col-span-2 lg:col-span-1">
-          <label className="font-semibold mb-1 flex text-sm">
-            <Route className="w-4 mr-2" />
-            Track
-          </label>
-          <TrackCombobox
-            onSelect={onTrackSelect}
-            initialTrack={activeTrack}
-            renderButton={({ getToggleButtonProps }) => (
-              <Button
-                className="w-full flex items-center justify-between border border-gray-300 !font-normal"
-                type="button"
-                icon={<ChevronsUpDown className="w-5" />}
-                {...getToggleButtonProps()}
-              >
-                {track ? track.name : "Select Track"}
-              </Button>
-            )}
-          />
-        </div>
-
-            <div className="w-full h-full flex flex-col items-between col-span-2 lg:col-span-1">
-                <label className="font-semibold mb-1 flex text-sm"><CarIcon className="w-4 mr-2" />Car</label>
-                <CarCombobox
-                    onSelect={onCarSelect}
-                    renderButton={({ getToggleButtonProps }) => (
-                        <Button
-                            className="w-full flex items-center justify-between border border-gray-300 !font-normal truncate !overflow-elipsis"
-                            type="button"
-                            icon={<ChevronsUpDown className="w-5" />}
-                            {...getToggleButtonProps()}
-                        >
-                            <span className="truncate whitespace-nowrap overflow-hidden w-full text-left">
-                                {car ? car.name : "Select Car"}
-                            </span>
-                        </Button>
-                        )}
-                />
-                </div>
-
-        <div className="w-full h-full flex flex-col items-between">
-          <label className="font-semibold mb-1 flex text-sm"><Calendar className="w-4 mr-2" />Date</label>
-          <input
-            type="date"
-            value={dayjs.unix(lapTime.date).format("YYYY-MM-DD")}
-            required
-            onChange={(e) =>
-              setLapTime((prev) => ({
-                ...prev,
-                date: dayjs(e.target.value).unix(),
-              }))
-            }
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-            placeholder="Select Date"
-            />
-        </div>
-
-
-
-        <div className="w-full h-full flex flex-col items-between">
-          <label className="font-semibold mb-1 flex text-sm">
-            <DecimalsArrowRight className="w-4 mr-2" />
-            Performance Index
-          </label>
-          <input
-            type="number"
-            value={lapTime.pi}
-            min={100}
-            max={999}
-            maxLength={3}
-            required
-            onChange={(e) =>
-              setLapTime((prev) => ({ ...prev, pi: Number(e.target.value) }))
-            }
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-            placeholder="Enter Performance Index (PI)"
-          />
-        </div>
-
-        <div className="w-full h-full flex flex-col items-between">
-          <label className="font-semibold mb-1 flex text-sm"><Timer className="w-4 mr-2" />Lap Time</label>
-          <div className="flex items-center space-x-2">
-            <input
-              type="number"
-              ref={minutesRef}
-              className="w-16 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="MM"
-              required
-              min={0}
-            />
-            <span>:</span>
-            <input
-              type="number"
-              ref={secondsRef}
-              className="w-16 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="SS"
-              required
-              min={0}
-            />
-            <span>:</span>
-            <input
-              type="number"
-              ref={millisecondsRef}
-              className="w-20 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="Ms"
-              min={0}
-              max={999}
+      <div className="w-full h-full flex flex-col items-between col-span-2 mb-2">
+            <label className="font-semibold mb-1 flex text-sm">
+              <CarIcon className="w-4 mr-2" />
+              Car
+            </label>
+            <CarCombobox
+              onSelect={onCarSelect}
+              renderButton={({ getToggleButtonProps }) => (
+                <Button
+                  className="w-full flex items-center justify-between border border-gray-300 !font-normal truncate !overflow-elipsis focus:ring-2 focus:ring-red-500"
+                  type="button"
+                  ref={carRef}
+                  icon={<ChevronsUpDown className="w-5" />}
+                  {...getToggleButtonProps()}
+                >
+                  <span className="truncate whitespace-nowrap overflow-hidden w-full text-left">
+                    {car ? car.name : "Select Car"}
+                  </span>
+                </Button>
+              )}
             />
           </div>
-              
-        </div>
+
+
+        <div className="grid grid-cols-2 grid-rows-2 lg:gap-4 gap-2 place-items-center">
+          <div className="w-full h-full flex flex-col items-between col-span-2 lg:col-span-1">
+            <label className="font-semibold mb-1 flex text-sm">
+              <Route className="w-4 mr-2" />
+              Track
+            </label>
+            <TrackCombobox
+              onSelect={onTrackSelect}
+              initialTrack={activeTrack}
+              renderButton={({ getToggleButtonProps }) => (
+                <Button
+                  className="w-full flex items-center justify-between border border-gray-300 !font-normal"
+                  type="button"
+                  icon={<ChevronsUpDown className="w-5" />}
+                  {...getToggleButtonProps()}
+                >
+                  {track ? track.name : "Select Track"}
+                </Button>
+              )}
+            />
+          </div>
+
+          <div className="w-full h-full flex flex-col items-between lg:col-span-1 col-span-2">
+            <label className="font-semibold mb-1 flex text-sm">
+              <Timer className="w-4 mr-2" />
+              Lap Time
+            </label>
+            <div className="flex items-center space-x-1.5 lg:justify-start justify-between">
+              <input
+                type="number"
+                ref={minutesRef}
+                className=" w-full lg:w-16 border border-gray-300 rounded-md py-2 px-1 focus:outline-none focus:ring-2 focus:ring-red-500"
+                placeholder="MM"
+                required
+                min={0}
+              />
+              <span>:</span>
+              <input
+                type="number"
+                ref={secondsRef}
+                className=" w-full lg:w-16 border border-gray-300 rounded-md py-2 px-1 focus:outline-none focus:ring-2 focus:ring-red-500"
+                placeholder="SS"
+                required
+                min={0}
+              />
+              <span>:</span>
+              <input
+                type="number"
+                ref={millisecondsRef}
+                className=" w-full lg:w-16 border border-gray-300 rounded-md py-2 px-1 focus:outline-none focus:ring-2 focus:ring-red-500"
+                placeholder="Ms"
+                min={0}
+                max={999}
+              />
+            </div>
+          </div>
+
+          
+
+          <div className="w-full h-full flex flex-col items-between">
+            <label className="font-semibold mb-1 flex text-sm">
+              <Calendar className="w-4 mr-2" />
+              Date
+            </label>
+            <input
+              type="date"
+              value={dayjs.unix(lapTime.date).format("YYYY-MM-DD")}
+              required
+              onChange={(e) =>
+                setLapTime((prev) => ({
+                  ...prev,
+                  date: dayjs(e.target.value).unix(),
+                }))
+              }
+              className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+              placeholder="Select Date"
+            />
+          </div>
+
+          <div className="w-full h-full flex flex-col items-between">
+            <label className="font-semibold mb-1 flex text-sm">
+              <DecimalsArrowRight className="w-4 mr-2" />
+              Performance Index
+            </label>
+            <input
+              type="number"
+              value={lapTime.pi}
+              min={100}
+              ref={piRef}
+              max={999}
+              maxLength={3}
+              required
+              onChange={(e) =>
+                setLapTime((prev) => ({ ...prev, pi: Number(e.target.value) }))
+              }
+              className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+              placeholder="Enter Performance Index (PI)"
+            />
+          </div>
+
+
 
         </div>
-
-                
       </form>
-      
     </Modal>
   );
 }
