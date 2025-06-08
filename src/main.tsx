@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")!).render(
   <>
-    <Toaster containerStyle={{ zIndex: 10000 }} />
+    <Toaster />
     <App />
   </>
 );

@@ -83,6 +83,6 @@ export default function Modal({
         </motion.div>
       )}
     </AnimatePresence>,
-    document.body
+    document.querySelector("#modal-root") || document.body
   );
 }
