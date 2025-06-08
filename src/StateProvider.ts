@@ -119,6 +119,7 @@ export const useAppState = create<State>((set, get) => {
             console.error("Error signing out:", error);
         } else {
             set({ user: null, lapTimes: [] });
+            window.location.reload();
         }
     }
 }});
