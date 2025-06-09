@@ -1,13 +1,11 @@
 import { AnimatePresence, motion } from "motion/react";
 import { createPortal } from "react-dom";
-import Button from "./Button";
+import Button, { type ButtonProps } from "./Button";
 import { XIcon } from "lucide-react";
-import type { ButtonHTMLAttributes } from "react";
 
 type ModalAction =  {
   label: string;
-  variant?: "default" | "danger" | "primary";
-} & ButtonHTMLAttributes<HTMLButtonElement>;
+} & Omit<ButtonProps, "children">
 
 type ModalProps = {
   isOpen: boolean;
@@ -19,20 +17,9 @@ type ModalProps = {
 };
 
 function ActionButton({ action }: { action: ModalAction }) {
-  const baseClasses =
-    "px-4 py-2 rounded-md text-sm font-medium focus:outline-none";
-  const variantClasses = {
-    default: "bg-gray-200 text-black hover:bg-gray-300",
-    danger: "bg-rose-600 text-white hover:bg-rose-700",
-    primary:
-      "bg-gradient-to-r from-red-500 to-pink-500 text-white hover:from-red-600 hover:to-pink-600",
-  };
 
   return (
     <Button
-      className={`${baseClasses} ${
-        variantClasses[action.variant || "default"]
-      }`}
       {...action}
     >
       {action.label}

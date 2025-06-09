@@ -46,7 +46,8 @@ function App() {
         <Trackbar />
         <FilterBar />
         <Button
-          className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white !justify-center !text-center font-bold py-3 px-6 !rounded-xl shadow-lg hover:shadow-xl transition-colors duration-150 hover:from-red-600 hover:to-pink-600"
+          variant="primary"
+          className="w-full justify-center text-center rounded-xl shadow-lg  py-2.5"
           onClick={() => setShowAddTimeModal(true)}
         >
           <Timer />

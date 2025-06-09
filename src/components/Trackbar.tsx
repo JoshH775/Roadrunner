@@ -20,7 +20,7 @@ export default function Trackbar() {
   return (
     <div
       id="track-component"
-      className="w-full flex lg:flex-row flex-col shadow-2xl p-4 lg:p-6 gap-2 lg:gap-0 lg:justify-between items-center rounded-lg bg-gradient-to-r from-blue-500/13 to-purple-500/13"
+      className="w-full flex lg:flex-row flex-col shadow-xl p-4 lg:p-6 gap-2 lg:gap-0 lg:justify-between items-center rounded-lg bg-gradient-to-r from-blue-500/13 to-purple-500/13"
     >
       <div className="flex lg:gap-6 gap-3 items-center min-w-fit w-full lg:w-auto">
         <Badge
@@ -48,7 +48,7 @@ export default function Trackbar() {
         className="lg:w-68"
         renderButton={({ getToggleButtonProps }) => (
           <Button
-            className="border border-gray-300 text-gray-500 bg-white w-full flex items-center justify-between"
+            className="border border-gray-300 text-gray-500 !flex-row-reverse bg-white w-full flex items-center justify-between"
             icon={<ChevronsUpDown className="w-5" />}
             {...getToggleButtonProps()}
           >

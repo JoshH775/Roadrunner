@@ -35,7 +35,7 @@ export default function ClassFilter({ onSelect, omitAll = false }: Props) {
         return (
             <div className="relative w-full">
             <label {...getLabelProps()} className="font-semibold flex"><Award className="mr-2 w-4"/>Class Filter</label>
-            <Button {...getToggleButtonProps({ type: 'button'})} className="w-full flex items-center justify-between border !font-normal mt-1 border-gray-300  bg-white" icon={<ChevronsUpDown  />}>
+            <Button {...getToggleButtonProps({ type: 'button'})} className="w-full flex-row-reverse flex items-center justify-between border !font-normal mt-1 border-gray-300  bg-white" icon={<ChevronsUpDown  />}>
                 {selectedItem
                     ? selectedItem.class === 'all'
                         ? 'All Classes'
