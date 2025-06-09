@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import type { DBResponse, LapTime, User } from "../types";
+import type { DBResponse, Friend, LapTime, User } from "../types";
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || "";
 const supabasePublicKey = process.env.VITE_SUPABASE_PUBLIC_KEY || "";
@@ -115,7 +115,7 @@ export function fetchUserProfile(authUUID: string): Promise<DBResponse<User>> {
       .select("visible, friend:friend_id(id, username, friend_code)")
       .eq("user_id", data.id);
 
-    const friendUsers: Omit<User, "friends">[] = (friendData || [])
+    const friendUsers: Friend[] = (friendData || [])
       //@ts-expect-error 2399 - TS thinks entry.friend is an array, but it's actually an object
       .map((entry) => ({ id: entry.friend.id, username: entry.friend.username, visible: entry.visible, friendCode: entry.friend.friend_code }))
       .flat();

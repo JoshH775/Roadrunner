@@ -16,7 +16,14 @@ export type User = {
     id: number;
     username: string;
     friendCode: string;
-    friends: Omit<User, "friends">[];
+    friends: Friend[]; // List of friends
+}
+
+export type Friend = {
+    id: number;
+    username: string;
+    friendCode: string;
+    visible: boolean; // Whether the friend is visible in the user's friend list
 }
 
 export type LapTime = {
