@@ -150,6 +150,7 @@ export default function AddTimeModal({
       onClose={onClose}
       title="Add New Lap Time"
       classname="flex flex-col"
+      icon={<Timer className="w-6" />}
       actions={[
         {
           label: "Save",
