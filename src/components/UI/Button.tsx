@@ -2,13 +2,12 @@ import React, { forwardRef } from 'react';
 import clsx from 'clsx';
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    children: React.ReactNode;
     variant?: 'primary' | 'secondary' | 'danger';
     icon?: React.ReactNode;
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ children, onClick, className = '', icon, variant, disabled, ...rest }, ref) => {
+    ({ onClick, className = '', icon, variant, disabled, ...rest }, ref) => {
         const defaultStyles = {
             primary: disabled
                 ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white'
@@ -34,7 +33,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 {...rest}
             >
                 {icon}
-                {children}
+                {rest.children}
             </button>
         );
     }
