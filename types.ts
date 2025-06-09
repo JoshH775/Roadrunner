@@ -16,7 +16,7 @@ export type User = {
     id: number;
     username: string;
     friendCode: string;
-    friends: { id: number; username: string }[];
+    friends: { id: number; username: string, visible: boolean }[];
 }
 
 export type LapTime = {
