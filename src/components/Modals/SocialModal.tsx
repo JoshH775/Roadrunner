@@ -3,7 +3,6 @@ import {
   EyeIcon,
   EyeOffIcon,
   Trash2Icon,
-  UserCog,
   UserPlus,
   Users,
 } from "lucide-react";
