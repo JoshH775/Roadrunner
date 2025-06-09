@@ -112,12 +112,12 @@ export function fetchUserProfile(authUUID: string): Promise<DBResponse<User>> {
 
     const { data: friendData } = await supabase
       .from("user_friends")
-      .select("visible, friend:friend_id(id, username)")
+      .select("visible, friend:friend_id(id, username, friend_code)")
       .eq("user_id", data.id);
 
-    const friendUsers: { id: number; username: string, visible: boolean }[] = (friendData || [])
+    const friendUsers: Omit<User, "friends">[] = (friendData || [])
       //@ts-expect-error 2399 - TS thinks entry.friend is an array, but it's actually an object
-      .map((entry) => ({ id: entry.friend.id, username: entry.friend.username, visible: entry.visible }))
+      .map((entry) => ({ id: entry.friend.id, username: entry.friend.username, visible: entry.visible, friendCode: entry.friend.friend_code }))
       .flat();
 
     return {
