@@ -13,6 +13,7 @@ type ModalProps = {
   title?: string;
   children: React.ReactNode;
   actions?: ModalAction[];
+  icon?: React.ReactNode;
   classname?: string;
 };
 
@@ -32,6 +33,7 @@ export default function Modal({
   onClose,
   children,
   title,
+  icon = null,
   actions = [],
   classname = "",
 }: ModalProps) {
@@ -48,8 +50,10 @@ export default function Modal({
             role="dialog"
             className={"relative bg-white lg:rounded-lg shadow-lg p-6 max-w-lg w-full " + classname}
           >
-            {title && <h2 className="text-xl font-bold mb-2 flex justify-between items-center text-g">
-              {title}{" "}
+            {title && <div className="text-xl font-bold mb-2 flex justify-between items-center text-g">
+              <span className="flex gap-2">
+                {icon}{title}{" "}
+              </span>
               {onClose && <button
                 className="cursor-pointer text-gray-500 hover:text-gray-700"
                 onClick={onClose}
@@ -57,7 +61,7 @@ export default function Modal({
               >
                 <XIcon className="w-4" />
               </button>}
-            </h2>}
+            </div>}
             {children}
             {actions.length > 0 && (
               <div className="mt-6 flex justify-end space-x-2">
