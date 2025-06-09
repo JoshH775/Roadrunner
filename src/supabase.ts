@@ -32,9 +32,10 @@ export const login = async (
       });
 
     if (signInError || !signInData || !signInData.user) {
+      console.warn("Sign in error:", signInError);
       return {
         data: null,
-        error: signInError?.message || "Failed to log in",
+        error: "Failed to log in",
       };
     }
 
@@ -56,12 +57,13 @@ export const register = async (
     );
 
     if (signUpError || !signUpData || !signUpData.user) {
+      console.warn("Sign up error:", signUpError);
       return {
         data: null,
         error:
           signUpError?.code === "user_already_exists"
             ? "Username already exists. Please choose a different one."
-            : signUpError?.message || "Failed to register",
+            : "Failed to register",
       };
     }
 
@@ -76,10 +78,11 @@ export const register = async (
       .single();
 
     if (error || !data) {
+      console.warn("Error creating user profile:", error);
       await supabase.auth.admin.deleteUser(signUpData.user.id); // Clean up if user creation fails
       return {
         data: null,
-        error: error?.message || "Failed to create user profile",
+        error: "Failed to create user profile",
       };
     }
 
@@ -104,9 +107,10 @@ export function fetchUserProfile(authUUID: string): Promise<DBResponse<User>> {
       .single();
 
     if (error || !data) {
+      console.warn("Error fetching user profile:", error);
       return {
         data: null,
-        error: error?.message || "Failed to fetch user profile",
+        error: "Failed to fetch user profile",
       };
     }
 
@@ -120,13 +124,12 @@ export function fetchUserProfile(authUUID: string): Promise<DBResponse<User>> {
       .map((entry) => ({ id: entry.friend.id, username: entry.friend.username, visible: entry.visible, friendCode: entry.friend.friend_code }))
       .flat();
 
+    const userProfile: User = { id: data.id, username: data.username, friendCode: data.friend_code, friends: friendUsers };
+
+    console.log("User profile:", userProfile);
+
     return {
-      data: {
-        id: data.id,
-        username: data.username,
-        friendCode: data.friend_code,
-        friends: friendUsers,
-      },
+      data: userProfile
     };
   });
 }
@@ -150,9 +153,10 @@ export async function addFriend(userId: number, friendCode: string): Promise<DBR
       .single();
 
     if (userError || !userData) {
+      console.warn("Error fetching user by friend code:", userError);
       return {
         data: null,
-        error: "Friend code not found",
+        error: "Friend code not found.",
       };
     }
 
@@ -164,9 +168,11 @@ export async function addFriend(userId: number, friendCode: string): Promise<DBR
       });
 
     if (insertError) {
+      console.warn("Error adding friend:", insertError);
       return {
         data: null,
-        error: insertError.message || "Failed to add friend",
+        error: insertError.code === "23505" // Unique violation
+          ? "You are already friends with this user." : "Failed to add friend.",
       };
     }
 
@@ -177,9 +183,10 @@ export async function addFriend(userId: number, friendCode: string): Promise<DBR
       .single();
 
     if (fetchError || !friendData) {
+      console.warn("Error fetching friend data:", fetchError);
       return {
         data: null,
-        error: fetchError?.message || "Failed to fetch friend data",
+        error:"Failed to fetch friend data.",
       };
     }
 
@@ -229,5 +236,50 @@ export async function addLapTime(
     return {
       data: data as LapTime,
     };
+  });
+}
+
+export async function toggleFriendVisibility(
+  userId: number,
+  friendId: number,
+  visible: boolean
+): Promise<DBResponse<void>> {
+  return asyncWrapper(async () => {
+    const { error } = await supabase
+      .from("user_friends")
+      .update({ visible })
+      .eq("user_id", userId)
+      .eq("friend_id", friendId);
+
+    if (error) {
+      return {
+        data: null,
+        error: error.message || "Failed to update friend visibility",
+      };
+    }
+
+    return { data: undefined };
+  });
+}
+
+export async function deleteFriend(
+  userId: number,
+  friendId: number
+): Promise<DBResponse<void>> {
+  return asyncWrapper(async () => {
+    const { error } = await supabase
+      .from("user_friends")
+      .delete()
+      .eq("user_id", userId)
+      .eq("friend_id", friendId);
+
+    if (error) {
+      return {
+        data: null,
+        error: error.message || "Failed to delete friend",
+      };
+    }
+
+    return { data: undefined };
   });
 }
