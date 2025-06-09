@@ -10,6 +10,7 @@ import AddTimeModal from "./components/Modals/AddTimeModal";
 import AuthModal from "./components/Modals/AuthModal";
 import { fetchUserProfile, supabase } from "./supabase";
 import FullscreenLoader from "./components/UI/FullscreenLoader";
+import Table from "./components/Table";
 
 function App() {
   const [showAddTimeModal, setShowAddTimeModal] = useState(false);
@@ -53,6 +54,7 @@ function App() {
           <Timer />
           Add Lap Time
         </Button>
+        <Table />
       </div>
       <AddTimeModal
         isOpen={showAddTimeModal}
