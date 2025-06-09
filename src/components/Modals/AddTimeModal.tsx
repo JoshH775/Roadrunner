@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Modal from "../UI/Modal";
 import { type Car, type LapTime, type Track } from "../../../types";
 import TrackCombobox from "../TrackCombobox";
@@ -16,6 +16,7 @@ import { useAppState } from "../../StateProvider";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import toast from "react-hot-toast";
+import { addLapTime } from "../../supabase";
 dayjs.extend(duration);
 
 export default function AddTimeModal({
@@ -27,15 +28,23 @@ export default function AddTimeModal({
 }) {
   const { activeTrack, user } = useAppState();
 
+  useEffect(() => {
+  if (isOpen) {
+    setTrack(activeTrack);
+    setLapTime((prev) => ({ ...prev, trackId: activeTrack.id }));
+  }
+}, [isOpen, activeTrack]);
+
+
+  const [loading, setLoading] = useState(false);
   const [track, setTrack] = useState<Track>(activeTrack);
   const [car, setCar] = useState<Car | null>(null);
-  const [lapTime, setLapTime] = useState<Omit<LapTime, "id">>({
+  const [lapTime, setLapTime] = useState<Omit<LapTime, "id" | "userId">>({
     time: 0,
     pi: 100,
     carId: car?.id || 0,
     trackId: track.id,
     date: dayjs().unix(),
-    userId: user?.id || 0,
     engineSwap: false,
     drivetrainSwap: false,
     flyingLap: false,
@@ -63,17 +72,20 @@ export default function AddTimeModal({
     }));
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
 
     if (!car || lapTime.carId === 0) {
       toast.error("Please select a car.");
       carRef.current?.focus();
+      setLoading(false);
       return;
     }
 
     if (!track || lapTime.trackId === 0) {
       toast.error("Please select a track.");
+      setLoading(false);
       return;
     }
 
@@ -84,22 +96,27 @@ export default function AddTimeModal({
     if (minutes <= 0 && seconds <= 0) {
       toast.error("Minutes and seconds cannnot both be zero.");
       timeInputRef.current?.focus();
+      setLoading(false);
       return;
     }
 
     if (minutes < 0 || seconds < 0 || milliseconds < 0) {
       toast.error("Time values cannot be negative.");
       timeInputRef.current?.focus();
-
+      setLoading(false);
       return;
     }
 
     if (lapTime.pi < 100 || lapTime.pi > 999) {
       toast.error("Performance Index (PI) must be between 100 and 999.");
       piRef.current?.focus();
+      setLoading(false);
       return;
     }
 
+  
+
+    toast.loading("Saving lap time...")
     const totalTime = dayjs
       .duration({
         minutes,
@@ -113,7 +130,18 @@ export default function AddTimeModal({
       time: totalTime,
     };
 
-    console.log("Submitting Lap Time:", finalLapTime);
+    const { data, error } = await addLapTime(finalLapTime, user!.id);
+    if (error || !data) {
+      toast.dismiss();
+      toast.error(error || "Failed to add lap time.");
+      setLoading(false);
+      return;
+    }
+
+    toast.dismiss();
+    toast.success("Lap time added!");
+    setLoading(false);
+    onClose();
   };
 
   return (
@@ -128,11 +156,12 @@ export default function AddTimeModal({
           variant: "primary",
           type: "submit",
           form: "add-lap-time-form",
+          disabled: loading,
         },
         {
           label: "Cancel",
           onClick: onClose,
-          variant: "default",
+          variant: "secondary",
         },
       ]}
     >
@@ -147,7 +176,7 @@ export default function AddTimeModal({
             onSelect={onCarSelect}
             renderButton={({ getToggleButtonProps }) => (
               <Button
-                className="w-full flex items-center justify-between border border-gray-300 !font-normal truncate !overflow-elipsis focus:ring-2 focus:ring-red-500"
+                className="w-full flex items-center flex-row-reverse justify-between border border-gray-300 !font-normal truncate !overflow-elipsis focus:ring-2 focus:ring-red-500"
                 type="button"
                 ref={carRef}
                 icon={<ChevronsUpDown className="w-5" />}
@@ -172,7 +201,7 @@ export default function AddTimeModal({
               initialTrack={activeTrack}
               renderButton={({ getToggleButtonProps }) => (
                 <Button
-                  className="w-full flex items-center justify-between border border-gray-300 !font-normal"
+                  className="w-full flex items-center justify-between flex-row-reverse border border-gray-300 !font-normal"
                   type="button"
                   icon={<ChevronsUpDown className="w-5" />}
                   {...getToggleButtonProps()}
