@@ -5,36 +5,23 @@ import Header from "./components/Header";
 import Trackbar from "./components/Trackbar";
 import { useAppState } from "./StateProvider";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddTimeModal from "./components/Modals/AddTimeModal";
 import AuthModal from "./components/Modals/AuthModal";
-import { fetchUserProfile, supabase } from "./supabase";
 import FullscreenLoader from "./components/UI/FullscreenLoader";
 import Table from "./components/Table";
+import { useAppInit } from "./useAppInit";
 
 function App() {
   const [showAddTimeModal, setShowAddTimeModal] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { loading, error } = useAppInit();
+  const { user } = useAppState();
 
-  const { fetchCars, user, setUser } = useAppState();
-
-  useEffect(() => {
-    async function init() {
-      await fetchCars();
-
-      const { data } = await supabase.auth.getUser();
-      if (data.user) {
-        const { data: userProfile } = await fetchUserProfile(data.user.id);
-        if (userProfile) {
-          setUser(userProfile);
-        }
-      }
-
-      setLoading(false);
-    }
-
-    init();
-  }, [fetchCars, setUser]);
+  if (error && !loading) {
+    console.error("Error during app initialization:", error);
+    return <div className="text-red-500">Error: {error}</div>;
+  }
+  
 
   return (
     <>
