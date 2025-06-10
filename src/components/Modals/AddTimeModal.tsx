@@ -26,7 +26,7 @@ export default function AddTimeModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const { activeTrack, user } = useAppState();
+  const { activeTrack, user, addLapTime: addLapTimeToState } = useAppState();
 
   useEffect(() => {
   if (isOpen) {
@@ -138,6 +138,10 @@ export default function AddTimeModal({
       return;
     }
 
+    console.log("Lap time added:", data);
+
+
+    addLapTimeToState(data);
     toast.dismiss();
     toast.success("Lap time added!");
     setLoading(false);
