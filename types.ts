@@ -26,6 +26,12 @@ export type Friend = {
     visible: boolean; // Whether the friend is visible in the user's friend list
 }
 
+export type FilterType =  {
+  carSearch: string;
+  carClass: PIClass;
+  modifications: ModificationOption;
+}
+
 export type LapTime = {
     id: number;
     userId: number;
