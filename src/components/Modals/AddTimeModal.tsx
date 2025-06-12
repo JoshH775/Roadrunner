@@ -16,7 +16,7 @@ import { useAppState } from "../../StateProvider";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import toast from "react-hot-toast";
-import { addLapTime } from "../../supabase";
+import { addLapTime, invalidateLapTimeCache } from "../../supabase";
 dayjs.extend(duration);
 
 export default function AddTimeModal({
@@ -142,6 +142,7 @@ export default function AddTimeModal({
 
 
     addLapTimeToState(data);
+    invalidateLapTimeCache(user!.id, track.id);
     toast.dismiss();
     toast.success("Lap time added!");
     setLoading(false);
