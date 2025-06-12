@@ -9,18 +9,40 @@ import { useState } from "react";
 import AddTimeModal from "./components/Modals/AddTimeModal";
 import AuthModal from "./components/Modals/AuthModal";
 import FullscreenLoader from "./components/UI/FullscreenLoader";
-import Table from "./components/Table";
 import { useAppInit } from "./useAppInit";
+import LapTimeViewer from "./components/TimeViewer/LaptimeViewer";
 
 function App() {
   const [showAddTimeModal, setShowAddTimeModal] = useState(false);
   const { loading, error } = useAppInit();
   const { user } = useAppState();
 
-  if (error && !loading) {
-    console.error("Error during app initialization:", error);
-    return <div className="text-red-500">Error: {error}</div>;
-  }
+if (error && !loading) {
+  console.error("Error during app initialization:", error);
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+      <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col items-center">
+        <svg
+          className="w-12 h-12 text-red-500 mb-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 9l-6 6m0-6l6 6" />
+        </svg>
+        <h2 className="text-2xl font-semibold text-red-600 mb-2">Something went wrong</h2>
+        <p className="text-gray-700 mb-4">{error}</p>
+        <button
+          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
+    </div>
+  );
+}
   
 
   return (
@@ -29,7 +51,7 @@ function App() {
       <Header />
       <div
         id="content"
-        className="container  flex-grow flex flex-col items-center py-6 space-y-6 lg:px-0 px-4"
+        className="container  flex-grow flex flex-col items-center py-6 gap-4 lg:px-0 px-4"
       >
         <Trackbar />
         <FilterBar />
@@ -41,7 +63,12 @@ function App() {
           <Timer />
           Add Lap Time
         </Button>
-        <Table />
+
+
+        {user && !loading && (<div className="w-full">
+          <LapTimeViewer />
+        </div>)}
+        
       </div>
       <AddTimeModal
         isOpen={showAddTimeModal}
