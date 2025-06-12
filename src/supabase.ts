@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import type { DBResponse, Friend, LapTime, User } from "../types";
+import type { Car, DBResponse, FilterType, Friend, LapTime, User } from "../types";
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || "";
 const supabasePublicKey = process.env.VITE_SUPABASE_PUBLIC_KEY || "";
@@ -126,8 +126,6 @@ export function fetchUserProfile(authUUID: string): Promise<DBResponse<User>> {
 
     const userProfile: User = { id: data.id, username: data.username, friendCode: data.friend_code, friends: friendUsers };
 
-    console.log("User profile:", userProfile);
-
     return {
       data: userProfile
     };
@@ -219,7 +217,6 @@ export async function addLapTime(
       flying_lap: lapTime.flyingLap,
     }
 
-    console.log("Adding lap time:", lapTimeSnakeCase);
     const { data, error } = await supabase
       .from("lap_times")
       .insert(lapTimeSnakeCase)
@@ -234,7 +231,18 @@ export async function addLapTime(
     }
 
     return {
-      data: data as LapTime,
+      data: {
+        id: data.id,
+        userId: data.user_id,
+        carId: data.car_id,
+        trackId: data.track_id,
+        time: data.time,
+        date: data.date,
+        pi: data.pi,
+        engineSwap: data.engine_swap,
+        drivetrainSwap: data.drivetrain_swap,
+        flyingLap: data.flying_lap,
+      }
     };
   });
 }
@@ -283,3 +291,95 @@ export async function deleteFriend(
     return { data: undefined };
   });
 }
+
+export async function fetchCars(): Promise<DBResponse<Car[]>> {
+  return asyncWrapper(async () => {
+    const { data, error } = await supabase
+      .from("cars")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error || !data) {
+      console.warn("Error fetching cars:", error);
+      return {
+        data: [],
+        error: "Failed to fetch cars",
+      };
+    }
+
+    return {
+      data: data as Car[],
+    };
+  });
+}
+
+const lapTimeCache: Record<string, LapTime[]> = {};
+
+export async function invalidateLapTimeCache(userId: number, trackId: number): Promise<void> {
+  const cacheKey = `${userId}-${trackId}`;
+  if (lapTimeCache[cacheKey]) {
+    delete lapTimeCache[cacheKey];
+  }
+}
+
+export async function fetchLapTimes(userId: number, trackId: number): Promise<DBResponse<LapTime[]>> {
+  return asyncWrapper(async () => {
+
+
+    const cacheKey = `${userId}-${trackId}`;
+
+    if (lapTimeCache[cacheKey]) {
+      return { data: lapTimeCache[cacheKey] };
+    }
+
+    const query = supabase.from("lap_times")
+      .select('*')
+      .eq("track_id", trackId)
+      .eq("user_id", userId)
+
+    const { data, error } = await query;
+
+    if (error || !data) {
+      console.warn("Error fetching lap times:", error);
+      return {
+        data: [],
+        error: "Failed to fetch lap times",
+      };
+    }
+
+     // lap is a LapTime but snake case, hence the any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const lapTimes: LapTime[] = data.map((lap: any) => ({
+              id: lap.id,
+              userId: lap.user_id,
+              carId: lap.car_id,
+              trackId: lap.track_id,
+              time: lap.time,
+              date: lap.date,
+              pi: lap.pi,
+              engineSwap: lap.engine_swap,
+              drivetrainSwap: lap.drivetrain_swap,
+              flyingLap: lap.flying_lap,
+            }));
+            
+    lapTimeCache[cacheKey] = lapTimes;
+
+    return {
+      data: lapTimes
+    }
+
+  })
+}
+
+export function applyFilters(lapTimes: LapTime[], filters: FilterType, cars: Car[]): LapTime[] {
+  return lapTimes.filter((lap) => {
+    const carMatches = filters.carSearch === "" || cars.find(car => car.id === lap.carId)?.name.toLowerCase().includes(filters.carSearch.toLowerCase());
+    const piMatches = filters.carClass.class === "all" || lap.pi >= filters.carClass.min && lap.pi <= filters.carClass.max;
+    const modMatches = filters.modifications === "all" ||
+      (filters.modifications === "engine" && lap.engineSwap) ||
+      (filters.modifications === "drivetrain" && lap.drivetrainSwap) ||
+      (filters.modifications === "both" && lap.engineSwap && lap.drivetrainSwap) ||
+      (filters.modifications === "stock" && !lap.engineSwap && !lap.drivetrainSwap);
+
+    return carMatches && piMatches && modMatches;
+  })}
