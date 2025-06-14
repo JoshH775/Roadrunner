@@ -18,7 +18,7 @@ export default function FilterBar() {
         setFilters({ carClass });
     }
     return (
-        <div className="shadow-xl p-6 flex flex-col  rounded-lg w-full gap-4 ">
+        <div className="shadow-xl p-6 flex flex-col  rounded-lg w-full gap-4 bg-gradient-to-r to-blue-500/13 from-purple-500/13 ">
             <div className="flex items-center gap-3">
             <Badge icon={<Filter className="text-white p-0" />} className="bg-gradient-to-r from-red-500 to-pink-500 h-full" />
             <div>
