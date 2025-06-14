@@ -4,6 +4,7 @@ import Modal from "../UI/Modal"
 import Button from "../UI/Button";
 import { login, register } from "../../supabase";
 import { useAppState } from "../../StateProvider";
+import toast from "react-hot-toast";
 
 type Props = DefaultModalProps
 
@@ -28,7 +29,8 @@ export default function AuthModal({isOpen}: Props) {
             console.log('Logging in with:', { username, password });
             const { data: user, error } = await login(username, password);
             if (!user || error) {
-                alert('Login failed: ' + (error));
+                toast.error('Login failed: ' + (error?.message || 'Unknown error'));
+                setLoading(false);
             } else {
                 setUsername('');
                 setPassword('');
@@ -40,14 +42,15 @@ export default function AuthModal({isOpen}: Props) {
 
         } else {
             if (password !== confirmPassword) {
-                alert("Passwords do not match");
+                toast.error('Passwords do not match');
                 setLoading(false);
                 return;
             }
 
             const { data: user, error } = await register(username, password);
             if (!user || error) {
-                alert('Registration failed: ' + (error));
+                toast.error('Registration failed: ' + (error?.message || 'Unknown error'));
+                setLoading(false);
             }
             else {
                 setUser(user);
