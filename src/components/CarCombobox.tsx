@@ -1,10 +1,11 @@
 import { useCombobox } from "downshift";
 import type { Car } from "../../types";
 import { useAppState } from "../StateProvider";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import PI from "./PI";
 import { Search } from "lucide-react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 type Props = {
   onSelect: (car: Car) => void;
@@ -22,6 +23,9 @@ export default function CarCombobox({
 }: Props) {
   const { cars } = useAppState();
   const [filteredCars, setFilteredCars] = useState<Car[]>(cars);
+  const menuRef = useRef<HTMLUListElement>(null);
+
+
 
   const {
     getMenuProps,
@@ -44,6 +48,7 @@ export default function CarCombobox({
         onSelect(selectedItem);
       }
     },
+    scrollIntoView() {},
 
     itemToString: (item) => (item ? item.name : ""),
     stateReducer(_state, actionAndChanges) {
@@ -56,7 +61,14 @@ export default function CarCombobox({
   });
 
   const inputProps = getInputProps({}, { suppressRefError: true });
-  const menuProps = getMenuProps({}, { suppressRefError: true });
+  const menuProps = getMenuProps({ ref: menuRef }, { suppressRefError: true });
+
+    const rowVirtualiser = useVirtualizer({
+    count: filteredCars.length,
+    getScrollElement: () => menuRef.current,
+    estimateSize: () => 40,
+    overscan: 5
+  }) 
 
   return (
     <div className={`relative w-full ${className}`}>
@@ -83,24 +95,29 @@ export default function CarCombobox({
             </span>
             <ul
               {...menuProps}
-              className="max-h-60 overflow-y-auto"
+              style={{
+                height: filteredCars.length === 0 ? "fit-content" : rowVirtualiser.getTotalSize(),
+                overflowAnchor: "none"
+              }}
+              className="max-h-60 overflow-y-auto relative"
             >
               {isOpen && filteredCars.length === 0 && (
                 <li className="p-2 text-gray-500 text-center">No cars found for "{inputValue}"</li>
               )}
               {isOpen &&
-                filteredCars.map((car, index) => (
-                  <li
+                rowVirtualiser.getVirtualItems().map((virtualRow) => {
+                  const car = filteredCars[virtualRow.index];
+                  return (<li
                     key={car.id}
-                    {...getItemProps({ item: car, index })}
+                    {...getItemProps({ item: car, index: virtualRow.index })}
                     className="p-2 flex cursor-pointer items-center justify-between"
                   >
                     <p>
                       {car.year} {car.name}
                     </p>
                     <PI pi={car.pi} />
-                  </li>
-                ))}
+                  </li>)
+})}
             </ul>
           </motion.div>
         )}
