@@ -35,18 +35,19 @@ export function useAppInit() {
         const { data: userProfile, error: profileError } =
           await fetchUserProfile(authData.user.id);
 
-        if (profileError) {
-          if (profileError.code === "PGRST116") {
+        if (profileError || !userProfile) {
+          if (profileError?.code === "PGRST116") {
             // User profile not found, set user to null
-            setUser(null);
             setLoading(false);
             return;
           }
 
-          setError(profileError.message ?? "Failed to fetch user profile");
+          setError(profileError?.message ?? "Failed to fetch user profile");
           setLoading(false);
           return;
         }
+        
+
 
         setUser(userProfile);
       }
