@@ -12,6 +12,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import duration from "dayjs/plugin/duration";
 import { useMemo } from "react";
 import { applyFilters } from "../../../supabase";
+import Pill from "../../UI/Pill";
 dayjs.extend(duration);
 dayjs.extend(localizedFormat);
 
@@ -30,16 +31,24 @@ export default function Table({ error, loading }: Props) {
 
 
 
-
-
   const cm = createColumnHelper<LapTime>();
 
   const columns = useMemo(
     () => [
+      cm.display({
+        id: "#",
+        header: "#",
+        cell: (info) => (
+          <span className="font-semibold">
+            {info.row.index + 1}
+          </span>
+        ),
+      }),
       cm.accessor("time", {
         header: "Time",
         cell: (info) =>
-          dayjs.duration(info.getValue(), "ms").format("mm:ss.SSS"),
+          <p className="font-semibold font-mono">{dayjs.duration(info.getValue(), "ms").format("mm:ss.SSS")}</p>,
+        
       }),
       cm.accessor("carId", {
         header: "Car",
@@ -55,15 +64,15 @@ export default function Table({ error, loading }: Props) {
       }),
       cm.accessor("flyingLap", {
         header: "Flying Lap",
-        cell: (info) => (info.getValue() ? "Yes" : "No"),
+        cell: (info) => <Pill trueText="Flying" falseText="Standing" bool={info.getValue()} />,
       }),
       cm.accessor("engineSwap", {
         header: "Engine Swap",
-        cell: (info) => (info.getValue() ? "Yes" : "No"),
+        cell: (info) => <Pill trueText="Engine Swap" falseText="Stock Engine" bool={info.getValue()} />,
       }),
       cm.accessor("drivetrainSwap", {
         header: "Drivetrain Swap",
-        cell: (info) => (info.getValue() ? "Yes" : "No"),
+        cell: (info) => <Pill trueText="Drivetrain Swap" falseText="Stock Drivetrain" bool={info.getValue()} />,
       }),
     ],
     [cars, cm]
@@ -118,9 +127,9 @@ if (loading) {
 
   return (
     <div className="w-full">
-      <div className="w-full max-w-full overflow-scroll">
-        <table className="w-full  border border-gray-300 table-auto">
-          <thead className="bg-gray-100">
+      <div className="w-full max-w-full overflow-scroll p-0.5">
+        <table className="w-full  border border-gray-300 table-auto rounded-xl">
+          <thead className="bg-gray-200/75">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
