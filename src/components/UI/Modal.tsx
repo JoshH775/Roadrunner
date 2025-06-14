@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { createPortal } from "react-dom";
 import Button, { type ButtonProps } from "./Button";
 import { XIcon } from "lucide-react";
+import { useEffect } from "react";
 
 type ModalAction =  {
   label: string;
@@ -37,6 +38,16 @@ export default function Modal({
   actions = [],
   classname = "",
 }: ModalProps) {
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("!overflow-hidden");
+    } else {
+      document.body.classList.remove("!overflow-hidden");
+    }
+  }, [isOpen])
+
+
   return createPortal(
     <AnimatePresence>
       {isOpen && (
@@ -48,7 +59,7 @@ export default function Modal({
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
             role="dialog"
-            className={"relative bg-white lg:rounded-lg shadow-lg p-6 max-w-lg w-full " + classname}
+            className={"relative bg-white lg:rounded-lg shadow-lg p-6 max-w-lg w-full overscroll-contain overflow-y-scroll max-h-[90dvh]  " + classname}
           >
             {title && <div className="text-xl font-bold mb-2 flex justify-between items-center text-g">
               <span className="flex gap-2">
