@@ -1,7 +1,15 @@
 import { load } from "cheerio";
-import { supabase } from "./src/supabase";
 import { Car } from "./types";
+import 'dotenv/config';
+import { createClient } from "@supabase/supabase-js";
+const supabaseUrl = process.env.VITE_SUPABASE_URL || "";
+const supabaseKey = process.env.VITE_SUPABASE_PUBLIC_KEY || "";
+const supabase = createClient(supabaseUrl, supabaseKey);
+const SCRAPER_KEY = process.env.SCRAPER_KEY || "";
+
 const cars: Car[] = []
+
+
 
 async function scrapeCars() {
   console.log("Starting scraper...");
