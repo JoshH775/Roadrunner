@@ -1,6 +1,6 @@
 import { useAppState } from "../../../StateProvider"
 import { applyFilters } from "../../../supabase"
-import Card from "./Card"
+import TimeCard from "./TimeCard"
 
 type Props = {
     error: string | null
@@ -12,7 +12,6 @@ export default function CardViewer({ error, loading }: Props) {
     const {
         lapTimes,
         filters,
-        user,
         cars
     } = useAppState()
 
@@ -37,10 +36,14 @@ export default function CardViewer({ error, loading }: Props) {
         );
 }
 
+        if (error) {
+            return <div>{error}</div>
+        }
+
     return (
         <div className="flex flex-col w-full items-center gap-2">
             {times.map((time, idx) => (
-                <Card time={time} index={idx} />
+                <TimeCard key={idx} time={time} index={idx} />
             ))}
         </div>
     )
