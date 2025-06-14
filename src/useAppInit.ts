@@ -3,50 +3,62 @@ import { useAppState } from "./StateProvider";
 import { fetchCars, fetchUserProfile, supabase } from "./supabase";
 
 export function useAppInit() {
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const { setCars, setUser, setLapTimes, setViewedUserId } = useAppState();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { setCars, setUser, setLapTimes, setViewedUserId } = useAppState();
 
-    useEffect(() => {
-        async function init() {
-            setLoading(true);
+  useEffect(() => {
+    async function init() {
+      setLoading(true);
 
-            // Fetch cars
-            const { data: cars, error: carError } = await fetchCars();
-            if (carError || !cars) {
-                setError("Failed to fetch cars");
-                setLoading(false);
-                return;
-            }
-            setCars(cars);
+      // Fetch cars
+      const { data: cars, error: carError } = await fetchCars();
+      if (carError || !cars) {
+        setError("Failed to fetch cars");
+        setLoading(false);
+        return;
+      }
+      setCars(cars);
 
-            // Check if user is authenticated
-            const { data: authData, error: authError } = await supabase.auth.getUser();
-            if (authError) {
-                // Log the auth error, but don’t treat it as a fatal error
-                console.warn("Auth check failed:", authError.message);
-            }
+      // Check if user is authenticated
+      const { data: authData, error: authError } =
+        await supabase.auth.getUser();
+      if (authError && authError.name !== "AuthSessionMissingError") {
+        console.warn("Error fetching authentication data:", );
+        setError(authError.message ?? "Failed to fetch authentication data");
+        setLoading(false);
+        return;
+      }
 
-            if (authData?.user) {
-                // Fetch user profile
-                const { data: userProfile, error: profileError } = await fetchUserProfile(authData.user.id);
-                if (profileError || !userProfile) {
-                    setError("Failed to fetch user profile");
-                    setLoading(false);
-                    return;
-                }
-                setUser(userProfile);
-                setViewedUserId(userProfile.id); // Set the viewed user to the logged-in user
-            } 
+      if (authData?.user) {
+        // Fetch user profile
+        const { data: userProfile, error: profileError } =
+          await fetchUserProfile(authData.user.id);
 
+        if (profileError) {
+          if (profileError.code === "PGRST116") {
+            // User profile not found, set user to null
+            setUser(null);
             setLoading(false);
+            return;
+          }
+
+          setError(profileError.message ?? "Failed to fetch user profile");
+          setLoading(false);
+          return;
         }
 
-        init();
-    }, [setCars, setUser, setLapTimes, setViewedUserId]);
+        setUser(userProfile);
+      }
 
-    return {
-        loading,
-        error,
-    };
+      setLoading(false);
+    }
+
+    init();
+  }, [setCars, setUser, setLapTimes, setViewedUserId]);
+
+  return {
+    loading,
+    error,
+  };
 }
