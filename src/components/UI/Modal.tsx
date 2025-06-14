@@ -59,7 +59,7 @@ export default function Modal({
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
             role="dialog"
-            className={"relative bg-white lg:rounded-lg shadow-lg p-6 max-w-lg w-full overscroll-contain overflow-y-scroll max-h-[90dvh]  " + classname}
+            className={"relative bg-white lg:rounded-lg shadow-lg p-6 max-w-lg w-full overscroll-contain overflow-y-auto max-h-[90dvh]  " + classname}
           >
             {title && <div className="text-xl font-bold mb-2 flex justify-between items-center text-g">
               <span className="flex gap-2">
