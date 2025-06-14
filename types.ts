@@ -85,5 +85,5 @@ export const piRanges: PIClass[] = [
 
 export type DBResponse<T> = {
   data: T | null;
-  error?: string;
+  error?: { message: string, code?: string };
 };
