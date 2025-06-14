@@ -10,7 +10,7 @@ import AddTimeModal from "./components/Modals/AddTimeModal";
 import AuthModal from "./components/Modals/AuthModal";
 import FullscreenLoader from "./components/UI/FullscreenLoader";
 import { useAppInit } from "./useAppInit";
-import LapTimeViewer from "./components/TimeViewer/LaptimeViewer";
+import TimeViewer from "./components/TimeViewer/TimeViewer";
 
 function App() {
   const [showAddTimeModal, setShowAddTimeModal] = useState(false);
@@ -66,7 +66,7 @@ if (error && !loading) {
 
 
         {user && !loading && (<div className="w-full">
-          <LapTimeViewer />
+          <TimeViewer />
         </div>)}
         
       </div>
