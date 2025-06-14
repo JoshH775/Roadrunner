@@ -1,10 +1,10 @@
 import { useMemo } from "react";
-import type { Friend } from "../../../../types";
-import Button from "../../UI/Button";
-import { useAppState } from "../../../StateProvider";
 import { Trophy } from "lucide-react";
+import type { Friend } from "../../types";
+import { useAppState } from "../StateProvider";
+import Button from "./UI/Button";
 
-export default function TableTabs() {
+export default function UserTabs() {
     const { viewedUserId, setViewedUserId, user } = useAppState();
 
 
@@ -29,7 +29,7 @@ export default function TableTabs() {
     }
 
     return (
-        <div className=" bg-gray-200 p-1 rounded-lg flex mx-auto mb-2 overflow-x-scroll">
+        <div className=" bg-gray-200/75 p-1 rounded-lg flex mx-auto mb-2 overflow-x-scroll">
             <div className="flex mx-auto gap-2 w-fit">
             {ids.map((id) => {
                 const friend = user!.friends.find((f: Friend) => f.id === id);
