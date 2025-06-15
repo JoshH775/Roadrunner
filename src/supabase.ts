@@ -350,6 +350,13 @@ export async function toggleFriendVisibility(
 
     if (!data || data.length === 0) {
       console.warn("No matching friend relationship found to update");
+      return {
+        data: null,
+        error: {
+          message: "No matching friend relationship found",
+          code: "FRIEND_RELATIONSHIP_NOT_FOUND",
+        }
+      }
     }
 
     return { data: undefined };
