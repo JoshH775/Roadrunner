@@ -52,7 +52,7 @@ export default function SocialModal({ isOpen, onClose }: DefaultModalProps) {
     );
 
     if (error && !data) {
-      toast.error(error);
+      toast.error(error.message);
       setLoading(false);
       return;
     }

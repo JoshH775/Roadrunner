@@ -133,7 +133,7 @@ export default function AddTimeModal({
     const { data, error } = await addLapTime(finalLapTime, user!.id);
     if (error || !data) {
       toast.dismiss();
-      toast.error(error || "Failed to add lap time.");
+      toast.error(error?.message || "Failed to add lap time.");
       setLoading(false);
       return;
     }

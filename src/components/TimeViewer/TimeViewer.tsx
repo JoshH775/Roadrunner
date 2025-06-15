@@ -32,7 +32,7 @@ export default function TimeViewer() {
             activeTrack.id,
           );
           if (times.error || !times.data) {
-            setError(times.error ?? "Unknown error");
+            setError(times.error?.message ?? "Unknown error");
             setLapTimes([]);
           } else {
             setError(null);
