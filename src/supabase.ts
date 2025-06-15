@@ -328,11 +328,14 @@ export async function toggleFriendVisibility(
   visible: boolean
 ): Promise<DBResponse<void>> {
   return asyncWrapper(async () => {
-    const { error } = await supabase
+    console.log(
+      `Toggling visibility for user ${userId} and friend ${friendId} to ${visible}`)
+    const { data, error } = await supabase
       .from("user_friends")
       .update({ visible })
       .eq("user_id", userId)
-      .eq("friend_id", friendId);
+      .eq("friend_id", friendId)
+      .select();
 
     if (error) {
       console.warn("Error updating friend visibility:", error);
@@ -345,9 +348,14 @@ export async function toggleFriendVisibility(
       };
     }
 
+    if (!data || data.length === 0) {
+      console.warn("No matching friend relationship found to update");
+    }
+
     return { data: undefined };
   });
 }
+
 
 export async function deleteFriend(
   userId: number,

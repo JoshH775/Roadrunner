@@ -87,7 +87,7 @@ export default function SocialModal({ isOpen, onClose }: DefaultModalProps) {
     setUser({
       ...user,
       friends: user.friends.map((friend) =>
-        friend.id === friendId ? { ...friend, visible: !visible } : friend
+        friend.id === friendId ? { ...friend, visible } : friend
       ),
     });
 
@@ -179,7 +179,7 @@ export default function SocialModal({ isOpen, onClose }: DefaultModalProps) {
                         )
                       }
                       onClick={() => {
-                        toggleFriendVisibility(friend.id, friend.visible);
+                        toggleFriendVisibility(friend.id, !friend.visible);
                       }}
                       className="!p-1"
                       disabled={loading}
