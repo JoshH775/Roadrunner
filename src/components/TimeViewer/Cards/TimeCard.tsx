@@ -3,6 +3,8 @@ import { useAppState } from "../../../StateProvider"
 import PI from "../../PI"
 import dayjs, { duration } from 'dayjs'
 import Pill from "../../UI/Pill"
+import { tracks } from "../../../tracks"
+
 dayjs.extend(duration)
 
 type Props = {
@@ -12,10 +14,13 @@ type Props = {
 
 export default function TimeCard({ time, index }: Props) {
 
-    const { cars } = useAppState()
+    const { cars, activeTrack } = useAppState();
+
+    const track = tracks.find((t) => t.id === time.trackId)?.name || 'Unknown Track';
 
     return (
         <div className="w-full border rounded-lg border-gray-300 p-4">
+            {activeTrack.id == 0 && <span className="font-bold mb-1">{track}</span>}
             <span className="flex w-full items-center justify-between font-bold text-lg "><p>#{index+1}</p><PI pi={time.pi} /></span>
             <p className="font-semibold text-xl">{cars.find((car) => car.id === time.carId)?.name || 'Unknown Car'}</p>
             <span className="flex items-ceter justify-between text-gray-700"><p className=" font-mono text-lg font-semibold">{dayjs.duration(time.time, 'ms').format('mm:ss.SSS')}</p> <p>{dayjs.unix(time.date).format('LL')}</p></span>

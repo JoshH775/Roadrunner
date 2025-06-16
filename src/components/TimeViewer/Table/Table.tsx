@@ -3,6 +3,7 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  type ColumnDef,
 } from "@tanstack/react-table";
 import type { LapTime, Car } from "../../../../types";
 import { useAppState } from "../../../StateProvider";
@@ -13,6 +14,7 @@ import duration from "dayjs/plugin/duration";
 import { useMemo } from "react";
 import { applyFilters } from "../../../supabase";
 import Pill from "../../UI/Pill";
+import { tracks } from "../../../tracks";
 dayjs.extend(duration);
 dayjs.extend(localizedFormat);
 
@@ -27,6 +29,7 @@ export default function Table({ error, loading }: Props) {
     cars,
     filters,
     lapTimes,
+    activeTrack,
   } = useAppState();
 
 
@@ -34,49 +37,64 @@ export default function Table({ error, loading }: Props) {
   const cm = createColumnHelper<LapTime>();
 
   const columns = useMemo(
-    () => [
-      cm.display({
-        id: "#",
-        header: "#",
-        cell: (info) => (
-          <span className="font-semibold">
-            {info.row.index + 1}
-          </span>
-        ),
-      }),
-      cm.accessor("time", {
-        header: "Time",
-        cell: (info) =>
-          <p className="font-semibold font-mono">{dayjs.duration(info.getValue(), "ms").format("mm:ss.SSS")}</p>,
+    () => {
+      const baseColumns: ColumnDef<LapTime, any>[] = [
+        cm.display({
+          id: "#",
+          header: "#",
+          cell: (info) => (
+            <span className="font-semibold">
+              {info.row.index + 1}
+            </span>
+          ),
+        }),
+        cm.accessor("time", {
+          header: "Time",
+          cell: (info) =>
+            <p className="font-semibold font-mono">{dayjs.duration(info.getValue(), "ms").format("mm:ss.SSS")}</p>,
+        }),
+        cm.accessor("carId", {
+          header: "Car",
+          cell: (info) => getCarById(info.getValue(), cars),
+        }),
+        cm.accessor("pi", {
+          header: "PI",
+          cell: (info) => <PI pi={info.getValue()} />,
+        }),
+        cm.accessor("date", {
+          header: "Date",
+          cell: (info) => dayjs.unix(info.getValue()).format("LL"),
+        }),
+        cm.accessor("flyingLap", {
+          header: "Flying Lap",
+          cell: (info) => <Pill trueText="Flying" falseText="Standing" bool={info.getValue()} className="truncate" />,
+        }),
+        cm.accessor("engineSwap", {
+          header: "Engine Swap",
+          cell: (info) => <Pill trueText="Engine Swap" falseText="Stock Engine" bool={info.getValue()} className="truncate" />,
+        }),
+        cm.accessor("drivetrainSwap", {
+          header: "Drivetrain Swap",
+          cell: (info) => <Pill trueText="Drivetrain Swap" falseText="Stock Drivetrain" bool={info.getValue()} className="truncate" />,
+        }),
         
-      }),
-      cm.accessor("carId", {
-        header: "Car",
-        cell: (info) => getCarById(info.getValue(), cars),
-      }),
-      cm.accessor("pi", {
-        header: "PI",
-        cell: (info) => <PI pi={info.getValue()} />,
-      }),
-      cm.accessor("date", {
-        header: "Date",
-        cell: (info) => dayjs.unix(info.getValue()).format("LL"),
-      }),
-      cm.accessor("flyingLap", {
-        header: "Flying Lap",
-        cell: (info) => <Pill trueText="Flying" falseText="Standing" bool={info.getValue()} className="truncate" />,
-      }),
-      cm.accessor("engineSwap", {
-        header: "Engine Swap",
-        cell: (info) => <Pill trueText="Engine Swap" falseText="Stock Engine" bool={info.getValue()} className="truncate" />,
-      }),
-      cm.accessor("drivetrainSwap", {
-        header: "Drivetrain Swap",
-        cell: (info) => <Pill trueText="Drivetrain Swap" falseText="Stock Drivetrain" bool={info.getValue()} className="truncate" />,
-      }),
-    ],
-    [cars, cm]
+      ];
+
+      if (activeTrack.id == 0) {
+        baseColumns.splice(3, 0,
+          cm.accessor("trackId", {
+            header: "Track",
+            cell: (info) => tracks.find(track => track.id === info.getValue())?.name || "Unknown Track",
+          })
+        );
+      }
+
+      return baseColumns;
+    },
+    [cars, cm, activeTrack]
   );
+
+ 
 
   const filteredLapTimes = useMemo(() => {
     return applyFilters(lapTimes, filters, cars);
@@ -172,3 +190,16 @@ function getCarById(carId: number, cars: Car[]) {
   const car = cars.find((car) => car.id === carId);
   return car ? `${car.year} ${car.name}` : "Unknown Car";
 }
+
+// function getUserById(targetUserId: number, user: User | null) {
+
+//   if (user) {
+//     const userList = [user, ...user.friends];
+//   const userFound = userList.find((user) => user.id === targetUserId);
+//   if (userFound) {
+//     return userFound.username
+//   }
+// }
+
+//   return "Unknown User";
+// }
