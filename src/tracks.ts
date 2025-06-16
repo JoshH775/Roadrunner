@@ -1,6 +1,7 @@
 import type { Track } from "../types";
 
 export const tracks: Track[] = [
+  { id: 0, name: "All Tracks", length: 0, type: "circuit" },
   { id: 1, name: "The Goliath", length: 33.9, type: "circuit" },
   { id: 2, name: "The Colossus", length: 34.3, type: "sprint" },
   { id: 3, name: "Los Jardines Circuit", length: 1.6, type: "circuit" },
