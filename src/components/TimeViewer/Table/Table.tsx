@@ -5,7 +5,7 @@ import {
   useReactTable,
   type ColumnDef,
 } from "@tanstack/react-table";
-import type { LapTime, Car, User } from "../../../../types";
+import type { LapTime, Car } from "../../../../types";
 import { useAppState } from "../../../StateProvider";
 import PI from "../../PI";
 import dayjs from "dayjs";
