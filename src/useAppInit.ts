@@ -5,11 +5,16 @@ import { fetchCars, fetchUserProfile, supabase } from "./supabase";
 export function useAppInit() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { setCars, setUser, setLapTimes, setViewedUserId } = useAppState();
+  const { setCars, setUser, setLapTimes, setViewedUserId, setActiveTrack } = useAppState();
 
   useEffect(() => {
     async function init() {
       setLoading(true);
+
+      const storageTrack = localStorage.getItem("activeTrack");
+      if (storageTrack) {
+        setActiveTrack(JSON.parse(storageTrack));
+      }
 
       // Fetch cars
       const { data: cars, error: carError } = await fetchCars();

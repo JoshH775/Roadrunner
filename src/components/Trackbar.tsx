@@ -15,6 +15,7 @@ export default function Trackbar() {
   const handleTrackSelect = (track: Track) => {
     setTrackButtonText(track.name);
     setActiveTrack(track);
+    localStorage.setItem("activeTrack", JSON.stringify(track));
   };
 
   return (
