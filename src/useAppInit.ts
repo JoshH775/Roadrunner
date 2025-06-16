@@ -55,6 +55,7 @@ export function useAppInit() {
 
 
         setUser(userProfile);
+        setViewedUserId(userProfile.id);
       }
 
       setLoading(false);

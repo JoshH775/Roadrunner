@@ -16,7 +16,7 @@ export default function AuthModal({isOpen}: Props) {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { setUser } = useAppState() 
+    const { setUser, setViewedUserId } = useAppState() 
 
     const activeClass = "bg-linear-to-r from-red-500 to-pink-500 text-white font-semibold";
 
@@ -35,6 +35,7 @@ export default function AuthModal({isOpen}: Props) {
                 setUsername('');
                 setPassword('');
                 setConfirmPassword('');
+                setViewedUserId(user.id);
                 setUser(user);
             }
 
