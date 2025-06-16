@@ -5,3 +5,14 @@
 The app was built to fill that gap. Whether you're testing a new car class, tuning setup, or just want to preserve more context around your laps, Roadrunner gives you a flexible way to record and reflect on your driving performance.
 
 _Note: Automatic lap time logging via telemetry was considered early in development. While technically feasible through FH5’s telemetry server and external tooling, it would require a more advanced setup than this project currently supports. Roadrunner instead focuses on a reliable, manual entry experience that's accessible to most players._
+
+## Features
+
+- **Lap Time Entry:** Add a lap right after completing a race. Log details like car, PI, track, drivetrain, and other contextual details.
+- **Personal Lap Table:** View all your entries in a sortable table. See how your times evolve over time or across vehicles.
+- **Player Profiles:** Each user has their own collection of laps visible to others (depending on visibility settings).
+- **Stats & Insights:** See your fastest laps, average times, and favorite cars. More visualizations planned in future updates.
+- **Track & Car Filtering:** Filter your entries (and others’) by car, track, class, and modifications.
+- **Friend Codes:** Add friends with a unique code and compare times side-by-side.
+- **Authentication:** Login and registration handled through Supabase Auth.
+- **Cloud Sync:** Lap data is stored securely and stays synced across devices via Supabase.
