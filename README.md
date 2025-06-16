@@ -13,6 +13,6 @@ _Note: Automatic lap time logging via telemetry was considered early in developm
 - **Player Profiles:** Each user has their own collection of laps visible to others (depending on visibility settings).
 - **Stats & Insights:** See your fastest laps, average times, and favorite cars. More visualizations planned in future updates.
 - **Track & Car Filtering:** Filter your entries (and others’) by car, track, class, and modifications.
-- **Friend Codes:** Add friends with a unique code and compare times side-by-side.
+- **Friend Codes:** Share your profile via a unique code. Others can follow your lap times once they add it. If you want to see theirs, they’ll need to share their code too.
 - **Authentication:** Login and registration handled through Supabase Auth.
 - **Cloud Sync:** Lap data is stored securely and stays synced across devices via Supabase.
