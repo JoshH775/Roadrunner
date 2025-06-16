@@ -6,16 +6,16 @@ import { duration } from "dayjs"
 import Badge from "./UI/Badge"
 import { CarFront, ChartLine, Hash, Timer } from "lucide-react"
 
-// rounded-lg border bg-card text-card-foreground bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-yellow-200 dark:border-yellow-800 shadow-lg
-//class="rounded-lg border bg-card text-card-foreground bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 shadow-lg"
+// rounded-lg border bg-card text-card-foreground bg-linear-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-yellow-200 dark:border-yellow-800 shadow-lg
+//class="rounded-lg border bg-card text-card-foreground bg-linear-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 shadow-lg"
 dayjs.extend(duration)
 
 
 
 function Average({ averageLapTime }: { averageLapTime: number }) {
   return (
-    <div className="flex items-center gap-2 lg:gap-3 w-full border lg:p-5 p-3 rounded-lg bg-gradient-to-br shadow-lg from-yellow-100 to-amber-100 border-yellow-300">
-      <Badge icon={<ChartLine className="text-white" />} className="!p-2.5 w-10 h-10 bg-gradient-to-r from-yellow-500 to-amber-500" />
+    <div className="flex items-center gap-2 lg:gap-3 w-full border lg:p-5 p-3 rounded-lg bg-linear-to-br shadow-lg from-yellow-100 to-amber-100 border-yellow-300">
+      <Badge icon={<ChartLine className="text-white" />} className="!p-2.5 w-10 h-10 bg-linear-to-r from-yellow-500 to-amber-500" />
       <div className="flex flex-col items-start justify-center w-full">
         <p className="text-yellow-700 text-sm lg:text-lg lg:font-semibold">Average</p>
         <p className="font-mono text-sm lg:text-xl font-semibold text-yellow-900">
@@ -28,8 +28,8 @@ function Average({ averageLapTime }: { averageLapTime: number }) {
 
 function FavoriteCar({ car }: { car?: Car }) {
   return (
-    <div className="flex items-center gap-2 lg:gap-3 w-full border lg:p-5 p-3 rounded-lg bg-gradient-to-br shadow-lg from-blue-100 to-indigo-100 border-blue-300">
-      <Badge icon={<CarFront className="text-white" />} className="!p-2.5 w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500" />
+    <div className="flex items-center gap-2 lg:gap-3 w-full border lg:p-5 p-3 rounded-lg bg-linear-to-br shadow-lg from-blue-100 to-indigo-100 border-blue-300">
+      <Badge icon={<CarFront className="text-white" />} className="!p-2.5 w-10 h-10 bg-linear-to-r from-blue-500 to-indigo-500" />
       <div className="flex flex-col items-start justify-center w-full">
         <p className="text-blue-700 text-sm lg:text-lg lg:font-semibold">Favorite Car</p>
         <p className="lg:text-xl text-sm font-semibold text-blue-900">
@@ -42,8 +42,8 @@ function FavoriteCar({ car }: { car?: Car }) {
 
 function FastestLap({ fastestLapTime }: { fastestLapTime?: LapTime }) {
   return (
-    <div className="flex items-center gap-2 lg:gap-3 w-full border lg:p-5 p-3 rounded-lg bg-gradient-to-br shadow-lg from-green-100 to-emerald-100 border-green-300">
-      <Badge icon={<Timer className="text-white" />} className="!p-2.5 w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500" />
+    <div className="flex items-center gap-2 lg:gap-3 w-full border lg:p-5 p-3 rounded-lg bg-linear-to-br shadow-lg from-green-100 to-emerald-100 border-green-300">
+      <Badge icon={<Timer className="text-white" />} className="!p-2.5 w-10 h-10 bg-linear-to-r from-green-500 to-emerald-500" />
       <div className="flex flex-col items-start justify-center w-full">
         <p className="text-green-700 text-sm lg:text-lg lg:font-semibold">Fastest Lap</p>
         <p className="font-mono lg:text-xl text-sm font-semibold text-green-900">
@@ -56,8 +56,8 @@ function FastestLap({ fastestLapTime }: { fastestLapTime?: LapTime }) {
 
 function TotalLaps({ totalLaps }: { totalLaps: number }) {
   return (
-    <div className="flex items-center gap-2 lg:gap-3 w-full border lg:p-5 p-3 rounded-lg bg-gradient-to-br shadow-lg from-purple-100 to-violet-100 border-purple-300">
-      <Badge icon={<Hash className="text-white" />} className="!p-2.5 w-10 h-10 bg-gradient-to-r from-purple-500 to-violet-500" />
+    <div className="flex items-center gap-2 lg:gap-3 w-full border lg:p-5 p-3 rounded-lg bg-linear-to-br shadow-lg from-purple-100 to-violet-100 border-purple-300">
+      <Badge icon={<Hash className="text-white" />} className="!p-2.5 w-10 h-10 bg-linear-to-r from-purple-500 to-violet-500" />
       <div className="flex flex-col items-start justify-center w-full">
         <p className="text-purple-700 text-sm lg:text-lg lg:font-semibold">Total Laps</p>
         <p className="lg:text-xl text-sm font-semibold text-purple-900">{totalLaps}</p>

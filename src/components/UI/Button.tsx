@@ -10,8 +10,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ({ onClick, className = '', icon, variant, disabled, ...rest }, ref) => {
         const defaultStyles = {
             primary: disabled
-                ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white'
-                : 'bg-gradient-to-r from-red-500 to-pink-500 text-white hover:from-red-600 hover:to-pink-600',
+                ? 'bg-linear-to-r from-red-500 to-pink-500 text-white'
+                : 'bg-linear-to-r from-red-500 to-pink-500 text-white hover:from-red-600 hover:to-pink-600',
             secondary: disabled
                 ? 'bg-gray-200 text-black'
                 : 'bg-gray-200 text-black hover:bg-gray-300',

@@ -20,12 +20,12 @@ export default function Trackbar() {
   return (
     <div
       id="track-component"
-      className="w-full flex lg:flex-row flex-col shadow-xl p-4 lg:p-6 gap-2 lg:gap-0 lg:justify-between items-center rounded-lg bg-gradient-to-r from-blue-500/13 to-purple-500/13"
+      className="w-full flex lg:flex-row flex-col shadow-xl p-4 lg:p-6 gap-2 lg:gap-0 lg:justify-between items-center rounded-lg bg-linear-to-r from-blue-500/13 to-purple-500/13"
     >
       <div className="flex lg:gap-6 gap-3 items-center min-w-fit w-full lg:w-auto">
         <Badge
           icon={<MapPin className="text-white" />}
-          className="bg-gradient-to-r from-red-500 to-pink-500 !w-16 !h-16"
+          className="bg-linear-to-r from-red-500 to-pink-500 !w-16 !h-16"
         />
         <div className="lg:space-y-2 space-y-1">
           <p className=" lg:text-2xl text-xl font-bold">{selectedTrack.name}</p>

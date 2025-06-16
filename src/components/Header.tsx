@@ -20,10 +20,10 @@ export default function Header() {
         <div className="flex items-center gap-2 w-full ">
           <Badge
             icon={<LeaderboardIcon className="fill-none text-white" />}
-            className="h-11 !p-1 bg-gradient-to-br from-red-500 to-pink-500"
+            className="h-11 !p-1 bg-linear-to-br from-red-500 to-pink-500"
           />
           <span className="w-full">
-            <p className="lg:text-2xl text-xl font-bold italic bg-gradient-to-r from-red-500 to-pink-500 bg-clip-text text-transparent">
+            <p className="lg:text-2xl text-xl font-bold italic bg-linear-to-r from-red-500 to-pink-500 bg-clip-text text-transparent">
               Roadrunner
             </p>
             <p className="text-gray-500 lg:font-semibold text-sm lg:text-base flex justify-start">

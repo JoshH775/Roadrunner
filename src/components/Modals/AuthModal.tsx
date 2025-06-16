@@ -18,7 +18,7 @@ export default function AuthModal({isOpen}: Props) {
 
     const { setUser } = useAppState() 
 
-    const activeClass = "bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold";
+    const activeClass = "bg-linear-to-r from-red-500 to-pink-500 text-white font-semibold";
 
     const handleSubmit = async (e: React.FormEvent) => {
         setLoading(true);
@@ -69,7 +69,7 @@ export default function AuthModal({isOpen}: Props) {
             isOpen={isOpen}
             classname="!p-0"
             >
-               <div className="bg-gradient-to-r from-red-500 to-pink-500 p-6 lg:rounded-t-lg text-center lg:text-start">
+               <div className="bg-linear-to-r from-red-500 to-pink-500 p-6 lg:rounded-t-lg text-center lg:text-start">
                     <p className="text-white font-bold text-2xl">Welcome to Roadrunner</p>
                     <p className="text-gray-100">Track your lap times and compete with friends</p>
                </div>
@@ -100,7 +100,7 @@ export default function AuthModal({isOpen}: Props) {
                         </div>
                     }
                     <div className="p-4 text-center">
-                        <Button type="submit" disabled={loading} className={`bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl !text-center transition-colors inline-block duration-150 w-full`}>
+                        <Button type="submit" disabled={loading} className={`bg-linear-to-r from-red-500 to-pink-500 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl !text-center transition-colors inline-block duration-150 w-full`}>
                             {type === 'login' ? 'Sign In' : 'Create an Account'}
                         </Button>
                     </div>
