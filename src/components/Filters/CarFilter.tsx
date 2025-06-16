@@ -17,7 +17,7 @@ export default function CarFilter() {
         placeholder="Enter car name or model..."
         value={filters.carSearch}
         onChange={handleInputChange}
-        className="mt-1"
+        className="mt-1 text-sm lg:text-base"
         label="Car Search"
         style={{backgroundColor: 'white'}}
         labelIcon={<Car className="mr-2 w-4" />}

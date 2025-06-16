@@ -18,7 +18,7 @@ export default function FilterBar() {
         setFilters({ carClass });
     }
     return (
-        <div className="shadow-xl p-6 flex flex-col  rounded-lg w-full gap-4 bg-linear-to-r to-blue-500/13 from-purple-500/13 ">
+        <div className="shadow-xl lg:p-6 p-3.5 flex flex-col  rounded-lg w-full gap-4 bg-linear-to-r to-blue-500/13 from-purple-500/13 ">
             <div className="flex items-center gap-3">
             <Badge icon={<Filter className="text-white p-0" />} className="bg-linear-to-r from-red-500 to-pink-500 h-full" />
             <div>
@@ -26,7 +26,7 @@ export default function FilterBar() {
                 <p className="text-gray-500">Select your preferences</p>
             </div>
             </div>
-            <div id="filters" className="flex flex-col lg:flex-row w-full gap-4  items-center">
+            <div id="filters" className="flex flex-col lg:flex-row w-full lg:gap-4 gap-1 items-center">
                 <CarFilter />
                 <ClassFilter onSelect={onClassSelect}/>
                 <ModificationsFilter onSelect={onModificationSelect} />

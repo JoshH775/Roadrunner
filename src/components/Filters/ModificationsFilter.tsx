@@ -33,9 +33,9 @@ export default function ModificationsFilter({ onSelect, omitAll = false }: Props
     const menuProps = getMenuProps({}, { suppressRefError: true });
 
     return (
-        <div className="relative w-full">
+        <div className="relative w-full text-sm lg:text-base">
             <label {...getLabelProps()} className="font-semibold flex"><Component className="mr-2 w-4" />Modifications</label>
-            <Button {...getToggleButtonProps({type: "button"})} className="w-full flex flex-row-reverse items-center justify-between border !font-normal mt-1 border-gray-300  bg-white" icon={<ChevronsUpDown />} >
+            <Button {...getToggleButtonProps({type: "button"})} className="w-full flex flex-row-reverse items-center justify-between border !font-normal mt-1 border-gray-300  bg-white" icon={<ChevronsUpDown className="w-5"/>} >
                 {selectedItem && selectedItem.label ? selectedItem.label : 'Select Modification'}
             </Button>
             <AnimatePresence>

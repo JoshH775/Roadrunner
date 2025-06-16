@@ -32,7 +32,7 @@ function FavoriteCar({ car }: { car?: Car }) {
       <Badge icon={<CarFront className="text-white" />} className="!p-2.5 w-10 h-10 bg-linear-to-r from-blue-500 to-indigo-500" />
       <div className="flex flex-col items-start justify-center w-full">
         <p className="text-blue-700 text-sm lg:text-lg lg:font-semibold">Favorite Car</p>
-        <p className="lg:text-xl text-sm font-semibold text-blue-900">
+        <p className="lg:text-xl text-sm font-semibold text-blue-900 line-clamp-2">
           {car ? car.name : "None"}
         </p>
       </div>

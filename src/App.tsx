@@ -51,7 +51,7 @@ if (error && !loading) {
       <Header />
       <div
         id="content"
-        className="container  flex-grow flex flex-col items-center py-6 gap-4 lg:px-0 px-4"
+        className="container  flex-grow flex flex-col items-center lg:py-6 py-3.5 gap-4 lg:px-0 px-4"
       >
         <Trackbar />
         <FilterBar />
