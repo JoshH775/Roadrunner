@@ -21,9 +21,9 @@ export default function TimeCard({ time, index }: Props) {
             <span className="flex items-ceter justify-between text-gray-700"><p className=" font-mono text-lg font-semibold">{dayjs.duration(time.time, 'ms').format('mm:ss.SSS')}</p> <p>{dayjs.unix(time.date).format('LL')}</p></span>
 
             <div className="flex items-center w-full mt-3 gap-1.5">
-                <Pill trueText="Engine Swap" falseText="Stock Engine" bool={time.engineSwap} />
-                <Pill trueText="Drivetrain Swap" falseText="Stock Drivetrain" bool={time.drivetrainSwap} />
-                <Pill trueText="Flying" falseText="Standing" bool={time.flyingLap} />
+                <Pill trueText="Engine Swap" falseText="Stock Engine" bool={time.engineSwap} className="truncate"/>
+                <Pill trueText="Drivetrain Swap" falseText="Stock Drivetrain" bool={time.drivetrainSwap} className="truncate"/>
+                <Pill trueText="Flying" falseText="Standing" bool={time.flyingLap} className="truncate" />
             </div>
         </div>
     )
