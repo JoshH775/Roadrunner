@@ -31,16 +31,20 @@ export default function Trackbar() {
         <div className="lg:space-y-2 space-y-1">
           <p className=" lg:text-2xl text-xl font-bold">{selectedTrack.name}</p>
           <div className="flex items-center gap-4 text-gray-500">
-            <span className="flex items-center gap-2">
-              <Timer className="w-4" />
-              {selectedTrack.type === "circuit"
-                ? "Circuit Race"
-                : "Sprint Race"}
-            </span>
-            <span className="flex items-center gap-2">
-              <Route className="w-4" />
-              {selectedTrack.length.toFixed(1)} mi.
-            </span>
+            {selectedTrack.id !== 0 && (
+              <>
+                <span className="flex items-center gap-2">
+                  <Timer className="w-4" />
+                  {selectedTrack.type === "circuit"
+                    ? "Circuit Race"
+                    : "Sprint Race"}
+                </span>
+                <span className="flex items-center gap-2">
+                  <Route className="w-4" />
+                  {selectedTrack.length.toFixed(1)} mi.
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>
