@@ -1,35 +1,42 @@
-CREATE TABLE IF NOT EXISTS cars (
-    id INTEGER PRIMARY KEY UNIQUE NOT NULL,
-    name TEXT NOT NULL,
-    year INTEGER NOT NULL,
-    pi INTEGER NOT NULL,
-    UNIQUE (name, year, pi)
-);
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
 
-CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    username TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    friend_code TEXT NOT NULL UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE public.cars (
+  id integer NOT NULL,
+  name text NOT NULL,
+  year integer NOT NULL,
+  pi integer NOT NULL,
+  CONSTRAINT cars_pkey PRIMARY KEY (id)
 );
-
-CREATE TABLE IF NOT EXISTS lap_times (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    car_id INTEGER NOT NULL,
-    track_id INTEGER NOT NULL,
-    time INTEGER NOT NULL,
-    date INTEGER NOT NULL,
-    pi INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (car_id) REFERENCES cars(id)
+CREATE TABLE public.lap_times (
+  id integer NOT NULL DEFAULT nextval('lap_times_id_seq'::regclass),
+  user_id integer NOT NULL,
+  car_id integer NOT NULL,
+  track_id integer NOT NULL,
+  time integer NOT NULL,
+  date integer NOT NULL,
+  pi integer NOT NULL,
+  engine_swap boolean NOT NULL DEFAULT false,
+  drivetrain_swap boolean NOT NULL DEFAULT false,
+  flying_lap boolean DEFAULT false,
+  CONSTRAINT lap_times_pkey PRIMARY KEY (id),
+  CONSTRAINT lap_times_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
-
-CREATE TABLE IF NOT EXISTS user_friends (
-    user_id INTEGER NOT NULL,
-    friend_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (friend_id) REFERENCES users(id),
-    PRIMARY KEY (user_id, friend_id)
+CREATE TABLE public.user_friends (
+  user_id integer NOT NULL,
+  friend_id integer NOT NULL,
+  visible boolean DEFAULT true,
+  CONSTRAINT user_friends_pkey PRIMARY KEY (user_id, friend_id),
+  CONSTRAINT user_friends_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
+  CONSTRAINT user_friends_friend_id_fkey FOREIGN KEY (friend_id) REFERENCES public.users(id)
+);
+CREATE TABLE public.users (
+  id integer NOT NULL DEFAULT nextval('users_id_seq'::regclass),
+  username text NOT NULL,
+  friend_code text NOT NULL UNIQUE,
+  created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+  auth_user_id uuid UNIQUE,
+  deleted_at integer,
+  CONSTRAINT users_pkey PRIMARY KEY (id),
+  CONSTRAINT fk_auth_user FOREIGN KEY (auth_user_id) REFERENCES auth.users(id)
 );
