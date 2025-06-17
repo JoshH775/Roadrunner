@@ -440,7 +440,8 @@ export async function fetchLapTimes(
     const query = supabase
       .from("lap_times")
       .select("*")
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .order("time", { ascending: true });
 
     if (trackId !== 0) {
       query.eq("track_id", trackId);
