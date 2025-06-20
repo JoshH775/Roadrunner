@@ -322,6 +322,28 @@ export async function addLapTime(
   });
 }
 
+export async function deleteLapTime(
+  laptimeId: number,
+): Promise<DBResponse<boolean>> {
+  return asyncWrapper(async () => {
+    const { data, error } = await supabase.from('lap_times').delete().eq('id', laptimeId).select()
+
+    if ( !data || error) {
+      console.warn("Error deleting laptime: ", error)
+      return {
+        data: null,
+        error: {
+          message: 'Failed to delete laptime.'
+        }
+      }
+    }
+
+    return {
+      data: true
+    }
+  })
+}
+
 export async function toggleFriendVisibility(
   userId: number,
   friendId: number,
