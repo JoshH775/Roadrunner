@@ -328,7 +328,7 @@ export async function deleteLapTime(
   return asyncWrapper(async () => {
     const { data, error } = await supabase.from('lap_times').delete().eq('id', laptimeId).select()
 
-    if ( !data || error) {
+    if (error || !data || data.length === 0) {
       console.warn("Error deleting laptime: ", error)
       return {
         data: null,
