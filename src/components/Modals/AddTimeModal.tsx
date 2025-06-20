@@ -205,6 +205,7 @@ export default function AddTimeModal({
             <TrackCombobox
               onSelect={onTrackSelect}
               initialTrack={activeTrack}
+              omitAllTracks
               renderButton={({ getToggleButtonProps }) => (
                 <Button
                   className="w-full flex items-center justify-between flex-row-reverse border border-gray-300 !font-normal"
@@ -212,7 +213,7 @@ export default function AddTimeModal({
                   icon={<ChevronsUpDown className="w-5" />}
                   {...getToggleButtonProps()}
                 >
-                  {track ? track.name : "Select Track"}
+                  {track && track.id !== 0 ? track.name : "Select Track"}
                 </Button>
               )}
             />

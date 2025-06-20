@@ -14,24 +14,27 @@ type Props = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getToggleButtonProps: () => any;
   }) => React.ReactNode;
+  omitAllTracks?: boolean
 }
 
 export default function TrackCombobox({
   onSelect,
   className,
   renderButton,
-    initialTrack,
+  initialTrack,
+  omitAllTracks = false
 }: Props) {
-  const [tracks, setTracks] = useState(AllTracks);
+  const [tracks, setTracks] = useState(omitAllTracks ? AllTracks.slice(1) : AllTracks);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  console.log(initialTrack)
   const {
     getMenuProps,
     isOpen,
     getItemProps,
     getInputProps,
     getToggleButtonProps,
-    inputValue    
+    inputValue,
   } = useCombobox({
     items: tracks,
     onInputValueChange: ({ inputValue }) => {
@@ -53,11 +56,12 @@ export default function TrackCombobox({
       }
       return changes;
     },
-    initialSelectedItem: initialTrack || null,
+    initialSelectedItem: (!initialTrack || initialTrack.id === 0) ? null: initialTrack
   });
 
   const inputProps = getInputProps({ ref: inputRef }, { suppressRefError: true });
   const menuProps = getMenuProps({}, { suppressRefError: true });
+
 
 
   return (
