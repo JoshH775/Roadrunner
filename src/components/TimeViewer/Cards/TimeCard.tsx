@@ -56,15 +56,19 @@ export default function TimeCard({ time, index }: Props) {
       {activeTrack.id == 0 && <span className="font-bold mb-1">{track}</span>}
       <span className="flex w-full items-center justify-between font-bold text-lg ">
         <p>#{index + 1}</p>
-        {viewedUserId === user?.id && <span className="flex items-center">
-          <Button
-            onClick={handleDeleteLaptime}
-            disabled={actionLoading}
-            icon={<Trash2 className="w-5 text-gray-500" />}
-            className="!p-1"
-          />
+        <span className="flex items-center">
+          {viewedUserId === user?.id && (
+            <div className="flex items-center actions">
+              <Button
+                onClick={handleDeleteLaptime}
+                disabled={actionLoading}
+                icon={<Trash2 className="w-5 text-gray-500" />}
+                className="!p-1"
+              />
+            </div>
+          )}
           <PI pi={time.pi} />
-        </span>}
+        </span>
       </span>
       <p className="font-semibold text-xl">
         {cars.find((car) => car.id === time.carId)?.name || "Unknown Car"}
