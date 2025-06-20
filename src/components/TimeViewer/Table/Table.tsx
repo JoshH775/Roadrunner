@@ -11,10 +11,13 @@ import PI from "../../PI";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import duration from "dayjs/plugin/duration";
-import { useMemo } from "react";
-import { applyFilters } from "../../../supabase";
+import { useMemo, useState } from "react";
+import { applyFilters, deleteLapTime } from "../../../supabase";
 import Pill from "../../UI/Pill";
 import { tracks } from "../../../tracks";
+import Button from "../../UI/Button";
+import { Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
 dayjs.extend(duration);
 dayjs.extend(localizedFormat);
 
@@ -30,9 +33,11 @@ export default function Table({ error, loading }: Props) {
     filters,
     lapTimes,
     activeTrack,
+    deleteLapTime: deleteLapTimeState
   } = useAppState();
 
-
+  //local loading state for actions
+  const [actionLoading, setActionLoading] = useState(false)
 
   const cm = createColumnHelper<LapTime>();
 
@@ -77,6 +82,17 @@ export default function Table({ error, loading }: Props) {
           header: "Drivetrain Swap",
           cell: (info) => <Pill trueText="Drivetrain Swap" falseText="Stock Drivetrain" bool={info.getValue()} className="truncate" />,
         }),
+        cm.display({
+          id: "actions",
+          header: "Actions",
+          cell: (info) => {
+            const time = info.row.original
+
+            return (
+              <Button icon={<Trash2 className="w-5 text-gray-700"/>} disabled={actionLoading} onClick={()=>{handleDeleteLaptime(time.id)}}/>
+            )
+          }
+        })
         
       ];
 
@@ -94,7 +110,24 @@ export default function Table({ error, loading }: Props) {
     [cars, cm, activeTrack]
   );
 
- 
+  const handleDeleteLaptime = async (id: number) => {
+    setActionLoading(true)
+    toast.loading('Deleting lap time...')
+    const { data, error } = await deleteLapTime(id)
+
+    if (!data || error) {
+      setActionLoading(false)
+      toast.dismiss()
+      toast.error(error?.message || 'Failed to delete time.')
+      return
+    }
+
+    toast.dismiss()
+    deleteLapTimeState(id)
+    toast.success('Laptime deleted successfully!')
+    setActionLoading(false)
+
+  }
 
   const filteredLapTimes = useMemo(() => {
     return applyFilters(lapTimes, filters, cars);
