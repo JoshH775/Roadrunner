@@ -50,16 +50,20 @@ export const useAppState = create<State>((set, get) => {
     },
     addLapTime: async (lapTime: LapTime) => {
       set({ lapTimes: [...get().lapTimes, lapTime] });
-    },
-    deleteLapTime: () => {},
-    setFilters: (filters: Partial<FilterType>) =>
+        },
+        deleteLapTime: (lapTimeId: number) => {
+      set((state) => ({
+        lapTimes: state.lapTimes.filter((lt) => lt.id !== lapTimeId),
+      }));
+        },
+        setFilters: (filters: Partial<FilterType>) =>
       set((state) => ({
         filters: {
           ...state.filters,
           ...filters,
         },
       })),
-    logout: async () => {
+        logout: async () => {
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error("Error signing out:", error);
