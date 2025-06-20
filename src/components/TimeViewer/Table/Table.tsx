@@ -33,6 +33,7 @@ export default function Table({ error, loading }: Props) {
     filters,
     lapTimes,
     activeTrack,
+    viewedUserId,
     deleteLapTime: deleteLapTimeState
   } = useAppState();
 
@@ -82,17 +83,6 @@ export default function Table({ error, loading }: Props) {
           header: "Drivetrain Swap",
           cell: (info) => <Pill trueText="Drivetrain Swap" falseText="Stock Drivetrain" bool={info.getValue()} className="truncate" />,
         }),
-        cm.display({
-          id: "actions",
-          header: "Actions",
-          cell: (info) => {
-            const time = info.row.original
-
-            return (
-              <Button icon={<Trash2 className="w-5 text-gray-700"/>} disabled={actionLoading} onClick={()=>{handleDeleteLaptime(time.id)}}/>
-            )
-          }
-        })
         
       ];
 
@@ -103,6 +93,20 @@ export default function Table({ error, loading }: Props) {
             cell: (info) => tracks.find(track => track.id === info.getValue())?.name || "Unknown Track",
           })
         );
+      }
+
+      if (viewedUserId === user?.id) {
+        baseColumns.push(cm.display({
+          id: "actions",
+          header: "Actions",
+          cell: (info) => {
+            const time = info.row.original
+
+            return (
+              <Button icon={<Trash2 className="w-5 text-gray-700"/>} disabled={actionLoading} onClick={()=>{handleDeleteLaptime(time.id)}}/>
+            )
+          }
+        }))
       }
 
       return baseColumns;
