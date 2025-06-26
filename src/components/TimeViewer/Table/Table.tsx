@@ -203,7 +203,7 @@ if (loading) {
           </thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="hover:bg-gray-50">
+              <tr key={row.id} id={row.id} className="hover:bg-gray-50">
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
