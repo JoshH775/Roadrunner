@@ -1,11 +1,15 @@
 import { load } from "cheerio";
 import { Car } from "./types";
-import 'dotenv/config';
+import * as dotenv from 'dotenv'
 import { createClient } from "@supabase/supabase-js";
+
+dotenv.config({
+  path: '.env.local'
+})
+
 const supabaseUrl = process.env.VITE_SUPABASE_URL || "";
 const supabaseKey = process.env.VITE_SUPABASE_PUBLIC_KEY || "";
 const supabase = createClient(supabaseUrl, supabaseKey);
-const SCRAPER_KEY = process.env.SCRAPER_KEY || "";
 
 const cars: Car[] = []
 
@@ -48,9 +52,14 @@ async function scrapeCars() {
       cars.push(car);
     });
 
-    await supabase.from("cars").upsert(cars);
-    const end = Date.now();
-    console.log(`Scraped ${cars.length} cars in ${end - start} ms`);
+    const dbResponse = await supabase.from("cars").upsert(cars).select('*')
+    if (!dbResponse.data) {
+      console.log('Failed to insert data (probaly RLS or smt)')
+    } else {
+      const end = Date.now();
+      console.log(`Scraped ${cars.length} cars in ${end - start} ms`);
+    }
+    
   } catch (error) {
     console.error("Error fetching the page:", error);
   }

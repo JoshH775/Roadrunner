@@ -8,8 +8,8 @@ import type {
   User,
 } from "../types";
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL || "";
-const supabasePublicKey = process.env.VITE_SUPABASE_PUBLIC_KEY || "";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
+const supabasePublicKey = import.meta.env.VITE_SUPABASE_PUBLIC_KEY || "";
 
 export const supabase = createClient(supabaseUrl, supabasePublicKey);
 
