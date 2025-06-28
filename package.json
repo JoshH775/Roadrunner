@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "scrape": "tsx scraper.ts"
+    "scrape": "tsx scraper.ts",
+    "db:reset": "supabase db reset"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.8",
@@ -25,6 +26,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",
+    "supabase": "^2.26.9",
     "tailwindcss": "^4.1.7",
     "tsx": "^4.19.4",
     "zustand": "^5.0.5"
