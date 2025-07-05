@@ -38,5 +38,7 @@ export const tracks: Track[] = [
   { id: 34, name: "Valle del Río Sprint", length: 4.5, type: "sprint" },
   { id: 35, name: "Rocosa Sprint", length: 3.6, type: "sprint" },
   { id: 36, name: "Horizon Stadium Circuit", length: 1.0, type: "circuit" },
+  { id: 37, name: "1/4 Mile", length: 0.25, type: "sprint" },
+  { id: 38, name: "1/2 Mile", length: 0.5, type: "sprint" },
 ];
 
