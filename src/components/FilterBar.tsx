@@ -5,10 +5,11 @@ import ClassFilter from "./Filters/ClassFilter";
 import ModificationsFilter from "./Filters/ModificationsFilter";
 import { useAppState } from "../StateProvider";
 import type { ModificationOption, PIClass } from "../../types";
+import NameFilter from "./Filters/NameFilter";
 
 export default function FilterBar() {
 
-    const { setFilters } = useAppState()
+    const { setFilters, viewedUserId } = useAppState()
 
     const onModificationSelect = (modification: ModificationOption) => {
         setFilters({ modifications: modification });
@@ -17,6 +18,11 @@ export default function FilterBar() {
     const onClassSelect = (carClass: PIClass) => {
         setFilters({ carClass });
     }
+
+    const onNameChange = (name: string) => {
+        setFilters({ username: name})
+    }
+
     return (
         <div className="shadow-xl lg:p-6 p-3.5 flex flex-col  rounded-lg w-full gap-4 bg-linear-to-r to-blue-500/13 from-purple-500/13 ">
             <div className="flex items-center gap-3">
@@ -30,6 +36,7 @@ export default function FilterBar() {
                 <CarFilter />
                 <ClassFilter onSelect={onClassSelect}/>
                 <ModificationsFilter onSelect={onModificationSelect} />
+                {viewedUserId === 0 && <NameFilter onChange={onNameChange}/>}
             </div>
 
         </div>
