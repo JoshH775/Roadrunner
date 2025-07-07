@@ -12,12 +12,13 @@ import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import duration from "dayjs/plugin/duration";
 import { useMemo, useState } from "react";
-import { applyFilters, deleteLapTime } from "../../../supabase";
+import {  deleteLapTime } from "../../../supabase";
 import Pill from "../../UI/Pill";
 import { tracks } from "../../../tracks";
 import Button from "../../UI/Button";
 import { Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import UserCell from "./UserCell";
 dayjs.extend(duration);
 dayjs.extend(localizedFormat);
 
@@ -30,12 +31,12 @@ export default function Table({ error, loading }: Props) {
   const {
     user,
     cars,
-    filters,
-    lapTimes,
+    lapTimes: filteredLapTimes,
     activeTrack,
     viewedUserId,
     deleteLapTime: deleteLapTimeState
   } = useAppState();
+
 
   //local loading state for actions
   const [actionLoading, setActionLoading] = useState(false)
@@ -109,6 +110,15 @@ export default function Table({ error, loading }: Props) {
         }))
       }
 
+      if (viewedUserId === 0) {
+        baseColumns.splice(3, 0,
+          cm.accessor("userId", {
+            header: "User",
+            cell: (info) => <UserCell userId={info.getValue()} />
+          }
+        ))
+      }
+
       return baseColumns;
     },
     [cars, cm, activeTrack]
@@ -133,9 +143,6 @@ export default function Table({ error, loading }: Props) {
 
   }
 
-  const filteredLapTimes = useMemo(() => {
-    return applyFilters(lapTimes, filters, cars);
-  }, [lapTimes, filters, cars]);
 
 
   const table = useReactTable({
@@ -227,16 +234,3 @@ function getCarById(carId: number, cars: Car[]) {
   const car = cars.find((car) => car.id === carId);
   return car ? `${car.year} ${car.name}` : "Unknown Car";
 }
-
-// function getUserById(targetUserId: number, user: User | null) {
-
-//   if (user) {
-//     const userList = [user, ...user.friends];
-//   const userFound = userList.find((user) => user.id === targetUserId);
-//   if (userFound) {
-//     return userFound.username
-//   }
-// }
-
-//   return "Unknown User";
-// }

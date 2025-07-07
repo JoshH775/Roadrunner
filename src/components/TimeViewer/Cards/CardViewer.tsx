@@ -10,12 +10,8 @@ type Props = {
 export default function CardViewer({ error, loading }: Props) {
 
     const {
-        lapTimes,
-        filters,
-        cars
+        lapTimes: times,
     } = useAppState()
-
-    const times = applyFilters(lapTimes, filters, cars)
 
     if (loading) {
         return (

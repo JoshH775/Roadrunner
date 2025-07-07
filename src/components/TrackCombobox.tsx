@@ -27,7 +27,6 @@ export default function TrackCombobox({
   const [tracks, setTracks] = useState(omitAllTracks ? AllTracks.slice(1) : AllTracks);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  console.log(initialTrack)
   const {
     getMenuProps,
     isOpen,
