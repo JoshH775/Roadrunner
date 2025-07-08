@@ -8,7 +8,7 @@ _Note: Automatic lap time logging via telemetry was considered early in developm
 
 ## Live Site
 
-Experience Roadrunner live at [https://horizonroadrunner.pages.dev](https://horizonroadrunner.pages.dev).
+Try it out live at [https://horizonroadrunner.pages.dev](https://horizonroadrunner.pages.dev).
 
 ## Features
 
