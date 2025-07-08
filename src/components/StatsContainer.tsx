@@ -1,6 +1,5 @@
 import type { Car, LapTime } from "../../types"
 import { useAppState } from "../StateProvider"
-import { applyFilters } from "../supabase"
 import dayjs from "dayjs"
 import { duration } from "dayjs"
 import Badge from "./UI/Badge"
@@ -69,9 +68,7 @@ function TotalLaps({ totalLaps }: { totalLaps: number }) {
 
 export default function Stats() {
 
-    const { lapTimes, cars, filters } = useAppState()
-
-    const times = applyFilters(lapTimes, filters, cars)
+    const { lapTimes: times, cars } = useAppState()
 
     const averageLapTime = times.reduce((acc, time) => acc + time.time, 0) / times.length
     const totalLaps = times.length

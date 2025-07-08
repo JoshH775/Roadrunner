@@ -1,5 +1,4 @@
 import { useAppState } from "../../../StateProvider"
-import { applyFilters } from "../../../supabase"
 import TimeCard from "./TimeCard"
 
 type Props = {
@@ -10,12 +9,8 @@ type Props = {
 export default function CardViewer({ error, loading }: Props) {
 
     const {
-        lapTimes,
-        filters,
-        cars
+        lapTimes: times,
     } = useAppState()
-
-    const times = applyFilters(lapTimes, filters, cars)
 
     if (loading) {
         return (

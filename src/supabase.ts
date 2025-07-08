@@ -455,18 +455,21 @@ export async function fetchLapTimes(
   return asyncWrapper(async () => {
     const cacheKey = `${userId}-${trackId}`;
 
-    if (lapTimeCache[cacheKey]) {
+    if (lapTimeCache[cacheKey] && userId !== 0) {
       return { data: lapTimeCache[cacheKey] };
     }
 
     const query = supabase
       .from("lap_times")
       .select("*")
-      .eq("user_id", userId)
       .order("time", { ascending: true });
 
     if (trackId !== 0) {
       query.eq("track_id", trackId);
+    }
+
+    if (userId !== 0) {
+      query.eq("user_id", userId)
     }
 
     const { data, error } = await query;
@@ -505,22 +508,24 @@ export async function fetchLapTimes(
   });
 }
 
-export function applyFilters(
+export async function applyFilters(
   lapTimes: LapTime[],
   filters: FilterType,
   cars: Car[]
-): LapTime[] {
-  return lapTimes.filter((lap) => {
-    const carMatches =
+): Promise<LapTime[]> {
+  const results =  await Promise.all(lapTimes.map(async (lap) => {
+    const carMatches = //If it passes the car search filters
       filters.carSearch === "" ||
       cars
         .find((car) => car.id === lap.carId)
         ?.name.toLowerCase()
         .includes(filters.carSearch.toLowerCase());
-    const piMatches =
+
+    const piMatches = //If it passes the PI filters
       filters.carClass.class === "all" ||
       (lap.pi >= filters.carClass.min && lap.pi <= filters.carClass.max);
-    const modMatches =
+
+    const modMatches = //If it passes the modification filters
       filters.modifications === "all" ||
       (filters.modifications === "engine" && lap.engineSwap) ||
       (filters.modifications === "drivetrain" && lap.drivetrainSwap) ||
@@ -531,6 +536,44 @@ export function applyFilters(
         !lap.engineSwap &&
         !lap.drivetrainSwap);
 
-    return carMatches && piMatches && modMatches;
+        let nameMatches = true; // Default to true, will be set to false if username filter is applied
+      if (filters.username) {
+        const user = await fetchUserById(lap.userId);
+        const username = user?.data?.username?.toLowerCase() ?? "";
+        nameMatches = username.includes(filters.username.toLowerCase());
+      }
+
+      // Return lap if all filters match, otherwise null
+      return carMatches && piMatches && modMatches && nameMatches ? lap : null;
+  }));
+
+    return results.filter((lap): lap is LapTime => lap !== null);
+}
+
+
+export async function fetchUserById(id: number): Promise<DBResponse<{ username: string }>> {
+  return asyncWrapper(async () => {
+    const { data, error } = await supabase
+      .from("users")
+      .select("username")
+      .eq("id", id)
+      .single();
+
+    if (error || !data) {
+      console.warn("Error fetching user by ID:", error);
+      return {
+        data: null,
+        error: {
+          message: "Failed to fetch user",
+          code: error?.code,
+        }
+      };
+    }
+
+    return {
+      data: {
+        username: data.username,
+      },
+    };
   });
 }

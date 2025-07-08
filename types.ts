@@ -30,6 +30,7 @@ export type FilterType =  {
   carSearch: string;
   carClass: PIClass;
   modifications: ModificationOption;
+  username?: string
 }
 
 export type LapTime = {

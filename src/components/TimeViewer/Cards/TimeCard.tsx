@@ -9,6 +9,7 @@ import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { deleteLapTime } from "../../../supabase";
+import Username from "../Username";
 
 dayjs.extend(duration);
 
@@ -53,9 +54,16 @@ export default function TimeCard({ time, index }: Props) {
 
   return (
     <div className="w-full border rounded-lg border-gray-300 p-4">
-      {activeTrack.id == 0 && <span className="font-bold mb-1">{track}</span>}
+      {activeTrack.id == 0 && <span className="font-semibold mb-2 text-sm text-gray-700">{track}</span>}
       <span className="flex w-full items-center justify-between font-bold text-lg ">
-        <p>#{index + 1}</p>
+        <span className="flex"><p>#{index + 1}</p>
+        {viewedUserId === 0 && (
+              <p className="flex gap-2 ml-2">
+                -
+               <Username userId={time.userId} />
+               </p>
+            )}
+        </span>
         <span className="flex items-center">
           {viewedUserId === user?.id && (
             <div className="flex items-center actions">

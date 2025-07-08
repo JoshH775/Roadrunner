@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchLapTimes } from "../../supabase";
+import { applyFilters, fetchLapTimes } from "../../supabase";
 import Table from "./Table/Table";
 import { useAppState } from "../../StateProvider";
 import Stats from "../StatsContainer";
@@ -15,6 +15,8 @@ export default function TimeViewer() {
         user,
         viewedUserId,
         activeTrack,
+        filters,
+        cars,
         setLapTimes,
       } = useAppState();
 
@@ -27,22 +29,25 @@ export default function TimeViewer() {
           }
     
           setLoading(true);
-          const times = await fetchLapTimes(
-            viewedUserId || user.id,
+          const { data, error } = await fetchLapTimes(
+            viewedUserId ?? user.id,
             activeTrack.id,
           );
-          if (times.error || !times.data) {
-            setError(times.error?.message ?? "Unknown error");
+
+
+          if (error || !data) {
+            setError(error?.message ?? "Unknown error");
             setLapTimes([]);
           } else {
             setError(null);
-            setLapTimes(times.data);
+            const times = await applyFilters(data, filters, cars)
+            setLapTimes(times);
           }
           setLoading(false);
         }
     
         fetchData();
-      }, [user, activeTrack.id, viewedUserId, setLapTimes]);
+      }, [user, activeTrack.id, viewedUserId, setLapTimes, filters, cars]);
 
     return (
         <div className="w-full border border-gray-300 rounded-lg p-4 shadow-lg ">
