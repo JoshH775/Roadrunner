@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useAppState } from "./StateProvider";
-import { fetchCars, fetchUserProfile, supabase } from "./supabase";
+import { useAppState } from "../StateProvider";
+import { fetchCars, supabase, fetchUserProfile } from "../supabase";
+
 
 export function useAppInit() {
   const [loading, setLoading] = useState(true);

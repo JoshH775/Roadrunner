@@ -9,7 +9,7 @@ import { useState } from "react";
 import AddTimeModal from "./components/Modals/AddTimeModal";
 import AuthModal from "./components/Modals/AuthModal";
 import FullscreenLoader from "./components/UI/FullscreenLoader";
-import { useAppInit } from "./useAppInit";
+import { useAppInit } from "./hooks/useAppInit";
 import TimeViewer from "./components/TimeViewer/TimeViewer";
 
 function App() {
