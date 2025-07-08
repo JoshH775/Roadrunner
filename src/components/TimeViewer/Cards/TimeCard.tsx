@@ -8,7 +8,7 @@ import Button from "../../UI/Button";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { deleteLapTime, fetchUserById } from "../../../supabase";
+import { deleteLapTime } from "../../../supabase";
 import Username from "../Username";
 
 dayjs.extend(duration);
