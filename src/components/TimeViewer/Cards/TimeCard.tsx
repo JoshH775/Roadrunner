@@ -32,15 +32,6 @@ export default function TimeCard({ time, index }: Props) {
 
   const [actionLoading, setActionLoading] = useState(false);
 
-  const fetchUserName = async (userId: number) => {
-    const { data, error } = await fetchUserById(userId);
-    if (error) {
-      console.error("Error fetching user:", error);
-      return "Unknown User";
-    }
-    return data?.username || "Unknown User";
-  };
-
   const handleDeleteLaptime = async () => {
     const id = time.id;
     setActionLoading(true);
