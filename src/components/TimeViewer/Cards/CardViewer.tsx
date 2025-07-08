@@ -1,5 +1,4 @@
 import { useAppState } from "../../../StateProvider"
-import { applyFilters } from "../../../supabase"
 import TimeCard from "./TimeCard"
 
 type Props = {

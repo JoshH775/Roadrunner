@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { fetchUserById } from "../../../supabase";
+import { fetchUserById } from "../supabase";
 
-export default function UserCell({ userId }: { userId: number }) {
-
-
+export function useUsername(userId: number): string | null {
     const [name, setName] = useState<string | null>(null);
 
     useEffect(() => {
@@ -12,16 +10,14 @@ export default function UserCell({ userId }: { userId: number }) {
             if (error) {
                 console.error("Error fetching user:", error);
             } else {
-                setName(data?.username || "Unknown User");
+                if (data?.username) {
+                    setName(data.username)
+                }
             }
         }
 
         fetchUser();
     })
 
-    return (
-        <span className="font-semibold">
-            {name || "Loading..."}
-        </span>
-    )
+    return name
 }

@@ -18,7 +18,7 @@ import { tracks } from "../../../tracks";
 import Button from "../../UI/Button";
 import { Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
-import UserCell from "./UserCell";
+import Username from "../Username";
 dayjs.extend(duration);
 dayjs.extend(localizedFormat);
 
@@ -114,7 +114,7 @@ export default function Table({ error, loading }: Props) {
         baseColumns.splice(3, 0,
           cm.accessor("userId", {
             header: "User",
-            cell: (info) => <UserCell userId={info.getValue()} />
+            cell: (info) => <Username className="font-semibold" userId={info.getValue()} />
           }
         ))
       }
