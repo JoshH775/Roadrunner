@@ -283,8 +283,6 @@ export async function addLapTime(
       time: lapTime.time,
       pi: lapTime.pi,
       date: lapTime.date,
-      engine_swap: lapTime.engineSwap,
-      drivetrain_swap: lapTime.drivetrainSwap,
       flying_lap: lapTime.flyingLap,
     };
 
@@ -525,16 +523,7 @@ export async function applyFilters(
       filters.carClass.class === "all" ||
       (lap.pi >= filters.carClass.min && lap.pi <= filters.carClass.max);
 
-    const modMatches = //If it passes the modification filters
-      filters.modifications === "all" ||
-      (filters.modifications === "engine" && lap.engineSwap) ||
-      (filters.modifications === "drivetrain" && lap.drivetrainSwap) ||
-      (filters.modifications === "both" &&
-        lap.engineSwap &&
-        lap.drivetrainSwap) ||
-      (filters.modifications === "stock" &&
-        !lap.engineSwap &&
-        !lap.drivetrainSwap);
+
 
         let nameMatches = true; // Default to true, will be set to false if username filter is applied
       if (filters.username) {
@@ -544,7 +533,7 @@ export async function applyFilters(
       }
 
       // Return lap if all filters match, otherwise null
-      return carMatches && piMatches && modMatches && nameMatches ? lap : null;
+      return carMatches && piMatches && nameMatches ? lap : null;
   }));
 
     return results.filter((lap): lap is LapTime => lap !== null);

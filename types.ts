@@ -29,7 +29,6 @@ export type Friend = {
 export type FilterType =  {
   carSearch: string;
   carClass: PIClass;
-  modifications: ModificationOption;
   username?: string
 }
 
