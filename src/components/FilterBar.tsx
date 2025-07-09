@@ -2,18 +2,13 @@ import { Filter } from "lucide-react";
 import Badge from "./UI/Badge";
 import CarFilter from "./Filters/CarFilter";
 import ClassFilter from "./Filters/ClassFilter";
-import ModificationsFilter from "./Filters/ModificationsFilter";
 import { useAppState } from "../StateProvider";
-import type { ModificationOption, PIClass } from "../../types";
+import type { PIClass } from "../../types";
 import NameFilter from "./Filters/NameFilter";
 
 export default function FilterBar() {
 
     const { setFilters, viewedUserId } = useAppState()
-
-    const onModificationSelect = (modification: ModificationOption) => {
-        setFilters({ modifications: modification });
-    }
 
     const onClassSelect = (carClass: PIClass) => {
         setFilters({ carClass });
