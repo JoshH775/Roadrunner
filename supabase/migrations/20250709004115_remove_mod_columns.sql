@@ -1,0 +1,1 @@
+ALTER TABLE "lap_times" DROP COLUMN "engine_swap", DROP COLUMN "drivetrain_swap";
