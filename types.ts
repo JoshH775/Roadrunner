@@ -41,8 +41,6 @@ export type LapTime = {
     time: number; // Time in ms
     date: number; //Unix timestamp
     pi: number;
-    engineSwap: boolean;
-    drivetrainSwap: boolean;
     flyingLap: boolean;
 }
 
