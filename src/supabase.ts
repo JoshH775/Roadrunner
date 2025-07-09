@@ -274,7 +274,7 @@ export async function addFriend(
 export async function addLapTime(
   lapTime: Omit<LapTime, "id" | "userId">,
   userId: number
-) {
+): Promise<DBResponse<LapTime>> {
   return asyncWrapper(async () => {
     const lapTimeSnakeCase = {
       user_id: userId,
@@ -284,6 +284,7 @@ export async function addLapTime(
       pi: lapTime.pi,
       date: lapTime.date,
       flying_lap: lapTime.flyingLap,
+      tune_code: lapTime.tuneCode
     };
 
     const { data, error } = await supabase
@@ -312,9 +313,8 @@ export async function addLapTime(
         time: data.time,
         date: data.date,
         pi: data.pi,
-        engineSwap: data.engine_swap,
-        drivetrainSwap: data.drivetrain_swap,
         flyingLap: data.flying_lap,
+        tuneCode: data.tune_code
       },
     };
   });
@@ -493,9 +493,8 @@ export async function fetchLapTimes(
       time: lap.time,
       date: lap.date,
       pi: lap.pi,
-      engineSwap: lap.engine_swap,
-      drivetrainSwap: lap.drivetrain_swap,
       flyingLap: lap.flying_lap,
+      tuneCode: lap.tune_code
     }));
 
     lapTimeCache[cacheKey] = lapTimes;

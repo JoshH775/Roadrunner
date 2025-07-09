@@ -76,6 +76,10 @@ export default function Table({ error, loading }: Props) {
           header: "Flying Lap",
           cell: (info) => <Pill trueText="Flying" falseText="Standing" bool={info.getValue()} className="truncate" />,
         }),
+        cm.accessor("tuneCode", {
+          header: "Tune Code",
+          cell: (info) => <p>{info.getValue() ?? 'N/A'}</p>
+        })
       ];
 
       if (activeTrack.id == 0) {

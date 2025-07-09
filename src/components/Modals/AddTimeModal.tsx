@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "../UI/Modal";
 import { type Car, type LapTime, type Track } from "../../../types";
 import TrackCombobox from "../TrackCombobox";
@@ -48,6 +48,7 @@ export default function AddTimeModal({
     trackId: track.id,
     date: dayjs().unix(),
     flyingLap: false,
+    tuneCode: null
   });
 
   const minutesRef = useRef<HTMLInputElement>(null);
@@ -57,6 +58,7 @@ export default function AddTimeModal({
   const carRef = useRef<HTMLButtonElement>(null);
   const piRef = useRef<HTMLInputElement>(null);
   const timeInputRef = useRef<HTMLDivElement>(null);
+  const tuneCodeRef = useRef<HTMLInputElement>(null)
 
   const onTrackSelect = (selectedTrack: Track) => {
     setTrack(selectedTrack);
@@ -71,6 +73,18 @@ export default function AddTimeModal({
       pi: selectedCar.pi,
     }));
   };
+
+  const onTuneCodeChange = (code: string) => {
+    if (!(/^\d+$/.test(code))) {
+      console.log('here')
+      return
+    }
+
+    setLapTime((prev) => ({
+      ...prev,
+      tuneCode: code
+    }))
+  }
 
   const onSubmit = async (e: React.FormEvent) => {
     setLoading(true);
@@ -112,6 +126,20 @@ export default function AddTimeModal({
       piRef.current?.focus();
       setLoading(false);
       return;
+    }
+
+    if (lapTime.tuneCode && !(/^\d+$/.test(lapTime.tuneCode))) {
+      toast.error("Tune code cannot contain non-numeric characters.")
+      tuneCodeRef.current?.focus()
+      setLoading(false)
+      return
+    }
+
+    if (lapTime.tuneCode && (lapTime.tuneCode.length > 9 || lapTime.tuneCode.length < 9)) {
+      toast.error("Tune code must be exactly 9 characters.")
+      tuneCodeRef.current?.focus()
+      setLoading(false)
+      return
     }
 
   
@@ -299,11 +327,17 @@ export default function AddTimeModal({
         </div>
 
         <Input
+          ref={tuneCodeRef}
           label="Tune Code"
           placeholder="Enter tune code..."
           labelIcon={<Wrench  className="w-4"/>}
           labelClassName="text-sm"
           containerClassName="mt-2"
+          minLength={9}
+          maxLength={9}
+          value={lapTime.tuneCode ?? ''}
+          onChange={(e) => onTuneCodeChange(e.target.value)}
+          type="numeric"
           />
       </form>
     </Modal>

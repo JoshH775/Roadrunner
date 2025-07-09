@@ -41,6 +41,7 @@ export type LapTime = {
     date: number; //Unix timestamp
     pi: number;
     flyingLap: boolean;
+    tuneCode: string | null
 }
 
 export type ModificationOption = 'all' | 'engine' | 'drivetrain' | 'both' | 'stock';

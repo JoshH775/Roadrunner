@@ -95,6 +95,11 @@ export default function TimeCard({ time, index }: Props) {
           bool={time.flyingLap}
           className="truncate"
         />
+        {time.tuneCode && <Pill
+          trueText={time.tuneCode}
+        falseText={time.tuneCode}
+        bool={true}
+        />}
       </div>
     </div>
   );
