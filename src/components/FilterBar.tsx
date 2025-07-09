@@ -35,7 +35,6 @@ export default function FilterBar() {
             <div id="filters" className="flex flex-col lg:flex-row w-full lg:gap-4 gap-1 items-center">
                 <CarFilter />
                 <ClassFilter onSelect={onClassSelect}/>
-                <ModificationsFilter onSelect={onModificationSelect} />
                 {viewedUserId === 0 && <NameFilter onChange={onNameChange}/>}
             </div>
 
