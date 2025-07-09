@@ -10,6 +10,7 @@ import {
   DecimalsArrowRight,
   Route,
   Timer,
+  Wrench,
 } from "lucide-react";
 import CarCombobox from "../CarCombobox";
 import { useAppState } from "../../StateProvider";
@@ -17,6 +18,7 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import toast from "react-hot-toast";
 import { addLapTime, invalidateLapTimeCache } from "../../supabase";
+import Input from "../UI/Input";
 dayjs.extend(duration);
 
 export default function AddTimeModal({
@@ -45,8 +47,6 @@ export default function AddTimeModal({
     carId: car?.id || 0,
     trackId: track.id,
     date: dayjs().unix(),
-    engineSwap: false,
-    drivetrainSwap: false,
     flyingLap: false,
   });
 
@@ -137,8 +137,6 @@ export default function AddTimeModal({
       setLoading(false);
       return;
     }
-
-    console.log("Lap time added:", data);
 
 
     addLapTimeToState(data);
@@ -300,60 +298,13 @@ export default function AddTimeModal({
           </div>
         </div>
 
-        <div className="w-full h-full flex flex-col items-between mt-2">
-          <label className="font-semibold mb-1 flex text-sm">
-            Modifications & Settings
-          </label>
-          <div className="flex flex-col gap-2">
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={lapTime.engineSwap}
-                onChange={(e) =>
-                  setLapTime((prev) => ({
-                    ...prev,
-                    engineSwap: e.target.checked,
-                  }))
-                }
-                className="w-5 h-5 rounded focus:ring-2 focus:ring-red-500 accent-red-500"
-                title="Engine Swap"
-              />
-              <span className="font-semibold text-sm">Engine Swap</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={lapTime.drivetrainSwap}
-                onChange={(e) =>
-                  setLapTime((prev) => ({
-                    ...prev,
-                    drivetrainSwap: e.target.checked,
-                  }))
-                }
-                className="w-5 h-5 rounded focus:ring-2 focus:ring-red-500 accent-red-500"
-                title="Drivetrain Swap"
-              />
-              <span className="font-semibold text-sm">Drivetrain Swap</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={lapTime.flyingLap}
-                onChange={(e) =>
-                  setLapTime((prev) => ({
-                    ...prev,
-                    flyingLap: e.target.checked,
-                  }))
-                }
-                className="w-5 h-5 rounded focus:ring-2 focus:ring-red-500 accent-red-500"
-                title="Flying Lap"
-              />
-              <span className="font-semibold text-sm">
-                Flying Lap (rolling start)
-              </span>
-            </label>
-          </div>
-        </div>
+        <Input
+          label="Tune Code"
+          placeholder="Enter tune code..."
+          labelIcon={<Wrench  className="w-4"/>}
+          labelClassName="text-sm"
+          containerClassName="mt-2"
+          />
       </form>
     </Modal>
   );
