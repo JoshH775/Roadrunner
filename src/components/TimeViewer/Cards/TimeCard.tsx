@@ -58,10 +58,10 @@ export default function TimeCard({ time, index }: Props) {
       <span className="flex w-full items-center justify-between font-bold text-lg ">
         <span className="flex"><p>#{index + 1}</p>
         {viewedUserId === 0 && (
-              <p className="flex gap-2 ml-2">
+              <span className="flex gap-2 ml-2">
                 -
                <Username userId={time.userId} />
-               </p>
+               </span>
             )}
         </span>
         <span className="flex items-center">
@@ -89,18 +89,6 @@ export default function TimeCard({ time, index }: Props) {
       </span>
 
       <div className="flex items-center w-full mt-3 gap-1.5">
-        <Pill
-          trueText="Engine Swap"
-          falseText="Stock Engine"
-          bool={time.engineSwap}
-          className="truncate"
-        />
-        <Pill
-          trueText="Drivetrain Swap"
-          falseText="Stock Drivetrain"
-          bool={time.drivetrainSwap}
-          className="truncate"
-        />
         <Pill
           trueText="Flying"
           falseText="Standing"
