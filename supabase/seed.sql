@@ -1054,12 +1054,12 @@ INSERT INTO "public"."users" ("id", "username", "friend_code", "created_at", "au
 -- Data for Name: lap_times; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."lap_times" ("id", "user_id", "car_id", "track_id", "time", "date", "pi", "engine_swap", "drivetrain_swap", "flying_lap") VALUES
-	(1, 1, 243, 6, 1000, 1751033477, 900, false, false, true),
-	(2, 1, 514, 1, 541001, 1751033477, 999, true, true, true),
-	(3, 1, 585, 2, 661110, 1751033477, 998, false, false, false),
-	(4, 1, 691, 8, 145154, 1751033477, 800, true, false, false),
-	(5, 1, 15, 13, 177712, 1751033477, 700, false, false, false);
+INSERT INTO "public"."lap_times" ("id", "user_id", "car_id", "track_id", "time", "date", "pi", "flying_lap", "tune_code") VALUES
+	(1, 1, 243, 6, 1000, 1751033477, 900, true, 652921773),
+	(2, 1, 514, 1, 541001, 1751033477, 999, true, 460881994),
+	(3, 1, 585, 2, 661110, 1751033477, 998, false, null),
+	(4, 1, 691, 8, 145154, 1751033477, 800, false, 200483774),
+	(5, 1, 15, 13, 177712, 1751033477, 700, false, null);
 
 
 --

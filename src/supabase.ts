@@ -274,7 +274,7 @@ export async function addFriend(
 export async function addLapTime(
   lapTime: Omit<LapTime, "id" | "userId">,
   userId: number
-) {
+): Promise<DBResponse<LapTime>> {
   return asyncWrapper(async () => {
     const lapTimeSnakeCase = {
       user_id: userId,
@@ -283,9 +283,8 @@ export async function addLapTime(
       time: lapTime.time,
       pi: lapTime.pi,
       date: lapTime.date,
-      engine_swap: lapTime.engineSwap,
-      drivetrain_swap: lapTime.drivetrainSwap,
       flying_lap: lapTime.flyingLap,
+      tune_code: lapTime.tuneCode
     };
 
     const { data, error } = await supabase
@@ -314,9 +313,8 @@ export async function addLapTime(
         time: data.time,
         date: data.date,
         pi: data.pi,
-        engineSwap: data.engine_swap,
-        drivetrainSwap: data.drivetrain_swap,
         flyingLap: data.flying_lap,
+        tuneCode: data.tune_code
       },
     };
   });
@@ -495,9 +493,8 @@ export async function fetchLapTimes(
       time: lap.time,
       date: lap.date,
       pi: lap.pi,
-      engineSwap: lap.engine_swap,
-      drivetrainSwap: lap.drivetrain_swap,
       flyingLap: lap.flying_lap,
+      tuneCode: lap.tune_code
     }));
 
     lapTimeCache[cacheKey] = lapTimes;
@@ -525,16 +522,7 @@ export async function applyFilters(
       filters.carClass.class === "all" ||
       (lap.pi >= filters.carClass.min && lap.pi <= filters.carClass.max);
 
-    const modMatches = //If it passes the modification filters
-      filters.modifications === "all" ||
-      (filters.modifications === "engine" && lap.engineSwap) ||
-      (filters.modifications === "drivetrain" && lap.drivetrainSwap) ||
-      (filters.modifications === "both" &&
-        lap.engineSwap &&
-        lap.drivetrainSwap) ||
-      (filters.modifications === "stock" &&
-        !lap.engineSwap &&
-        !lap.drivetrainSwap);
+
 
         let nameMatches = true; // Default to true, will be set to false if username filter is applied
       if (filters.username) {
@@ -544,7 +532,7 @@ export async function applyFilters(
       }
 
       // Return lap if all filters match, otherwise null
-      return carMatches && piMatches && modMatches && nameMatches ? lap : null;
+      return carMatches && piMatches && nameMatches ? lap : null;
   }));
 
     return results.filter((lap): lap is LapTime => lap !== null);

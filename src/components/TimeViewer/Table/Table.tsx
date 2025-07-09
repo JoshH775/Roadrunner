@@ -76,15 +76,10 @@ export default function Table({ error, loading }: Props) {
           header: "Flying Lap",
           cell: (info) => <Pill trueText="Flying" falseText="Standing" bool={info.getValue()} className="truncate" />,
         }),
-        cm.accessor("engineSwap", {
-          header: "Engine Swap",
-          cell: (info) => <Pill trueText="Engine Swap" falseText="Stock Engine" bool={info.getValue()} className="truncate" />,
-        }),
-        cm.accessor("drivetrainSwap", {
-          header: "Drivetrain Swap",
-          cell: (info) => <Pill trueText="Drivetrain Swap" falseText="Stock Drivetrain" bool={info.getValue()} className="truncate" />,
-        }),
-        
+        cm.accessor("tuneCode", {
+          header: "Tune Code",
+          cell: (info) => <p>{info.getValue() ?? 'N/A'}</p>
+        })
       ];
 
       if (activeTrack.id == 0) {

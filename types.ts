@@ -29,7 +29,6 @@ export type Friend = {
 export type FilterType =  {
   carSearch: string;
   carClass: PIClass;
-  modifications: ModificationOption;
   username?: string
 }
 
@@ -41,9 +40,8 @@ export type LapTime = {
     time: number; // Time in ms
     date: number; //Unix timestamp
     pi: number;
-    engineSwap: boolean;
-    drivetrainSwap: boolean;
     flyingLap: boolean;
+    tuneCode: string | null
 }
 
 export type ModificationOption = 'all' | 'engine' | 'drivetrain' | 'both' | 'stock';

@@ -36,11 +36,16 @@ export default function ClassFilter({ onSelect, omitAll = false }: Props) {
             <div className="relative w-full text-sm lg:text-base">
             <label {...getLabelProps()} className="font-semibold flex"><Award className="mr-2 w-4"/>Class Filter</label>
             <Button {...getToggleButtonProps({ type: 'button'})} className=" w-full flex-row-reverse flex items-center justify-between border !font-normal mt-1 border-gray-300  bg-white" icon={<ChevronsUpDown className="w-5" />}>
-                {selectedItem
-                    ? selectedItem.class === 'all'
-                        ? 'All Classes'
-                        : `${selectedItem.class} Class`
-                    : 'Select Class'}
+                <div className="flex items-center justify-between w-full">
+                    <span>
+                        {selectedItem
+                            ? selectedItem.class === 'all'
+                                ? 'All Classes'
+                                : `${selectedItem.class} Class`
+                            : 'Select Class'}
+                    </span>
+                    {selectedItem && selectedItem.class !== 'all' && <PI pi={selectedItem.max} />}
+                </div>
              </Button>
              <AnimatePresence>
              {isOpen && <motion.div {...menuProps} className="overscroll-contain absolute z-10 bg-white border w-full border-gray-300 rounded-md shadow-lg mt-1 max-h-45 overflow-y-scroll" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.15, ease: "easeInOut" }}>
