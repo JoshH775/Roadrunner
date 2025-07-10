@@ -6,7 +6,9 @@ import Button from "../UI/Button";
 import {
   Calendar,
   CarIcon,
+  ChevronDown,
   ChevronsUpDown,
+  ChevronUp,
   DecimalsArrowRight,
   Route,
   Timer,
@@ -30,6 +32,8 @@ export default function AddTimeModal({
   onClose: () => void;
 }) {
   const { activeTrack, user, addLapTime: addLapTimeToState } = useAppState();
+
+  const [extraOptions, setExtraOptions] = useState(false)
 
   useEffect(() => {
   if (isOpen) {
@@ -334,9 +338,14 @@ export default function AddTimeModal({
           </div>
         </div>
 
-        <Input
+        <button className="flex items-center gap-2 cursor-pointer p-2 font-semibold" onClick={() => setExtraOptions(!extraOptions)} type="button">
+          <p>Additional Options</p>
+          {extraOptions ? <ChevronUp className="w-4" /> : <ChevronDown className="w-4" />}
+        </button>
+
+        {extraOptions && <Input
           ref={tuneCodeRef}
-          label="Tune Code"
+          label="Tune Code (optional)"
           placeholder="Enter tune code..."
           labelIcon={<Wrench  className="w-4"/>}
           labelClassName="text-sm"
@@ -346,9 +355,9 @@ export default function AddTimeModal({
           value={lapTime.tuneCode ?? ''}
           onChange={(e) => onTuneCodeChange(e.target.value)}
           type="numeric"
-          />
+          />}
 
-          <Input
+          {extraOptions && <Input
             ref={videoUrlRef}
             label="Video Link (optional)"
             placeholder="Enter video URL..."
@@ -357,7 +366,7 @@ export default function AddTimeModal({
             containerClassName="mt-2"
             value={lapTime.videoUrl ?? ''}
             onChange={(e) => setLapTime((prev) => ({...prev, videoUrl: e.target.value}))}
-            />
+            />}
       </form>
     </Modal>
   );
