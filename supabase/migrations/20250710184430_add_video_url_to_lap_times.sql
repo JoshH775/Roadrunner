@@ -1,0 +1,1 @@
+ALTER TABLE lap_times ADD COLUMN video_url TEXT;
