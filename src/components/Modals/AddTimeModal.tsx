@@ -338,7 +338,7 @@ export default function AddTimeModal({
           </div>
         </div>
 
-        <button className="flex items-center gap-2 cursor-pointer p-2 font-semibold" onClick={() => setExtraOptions(!extraOptions)} type="button">
+        <button className="flex items-center gap-2 cursor-pointer p-2 pl-0 font-semibold" onClick={() => setExtraOptions(!extraOptions)} type="button">
           <p>Additional Options</p>
           {extraOptions ? <ChevronUp className="w-4" /> : <ChevronDown className="w-4" />}
         </button>
