@@ -349,7 +349,7 @@ export default function AddTimeModal({
           placeholder="Enter tune code..."
           labelIcon={<Wrench  className="w-4"/>}
           labelClassName="text-sm"
-          containerClassName="mt-2"
+          containerClassName="mt-0.5"
           minLength={9}
           maxLength={9}
           value={lapTime.tuneCode ?? ''}
