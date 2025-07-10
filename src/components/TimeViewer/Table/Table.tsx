@@ -11,14 +11,11 @@ import PI from "../../PI";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import duration from "dayjs/plugin/duration";
-import { useMemo, useState } from "react";
-import {  deleteLapTime } from "../../../supabase";
+import { useMemo } from "react";
 import Pill from "../../UI/Pill";
 import { tracks } from "../../../tracks";
-import Button from "../../UI/Button";
-import { Trash2 } from "lucide-react";
-import toast from "react-hot-toast";
 import Username from "../Username";
+import ActionBlock from "./ActionBlock";
 dayjs.extend(duration);
 dayjs.extend(localizedFormat);
 
@@ -34,12 +31,9 @@ export default function Table({ error, loading }: Props) {
     lapTimes: filteredLapTimes,
     activeTrack,
     viewedUserId,
-    deleteLapTime: deleteLapTimeState
   } = useAppState();
 
 
-  //local loading state for actions
-  const [actionLoading, setActionLoading] = useState(false)
 
   const cm = createColumnHelper<LapTime>();
 
@@ -91,7 +85,6 @@ export default function Table({ error, loading }: Props) {
         );
       }
 
-      if (viewedUserId === user?.id) {
         baseColumns.push(cm.display({
           id: "actions",
           header: "Actions",
@@ -99,11 +92,11 @@ export default function Table({ error, loading }: Props) {
             const time = info.row.original
 
             return (
-              <Button icon={<Trash2 className="w-5 text-gray-700"/>} disabled={actionLoading} onClick={()=>{handleDeleteLaptime(time.id)}}/>
+              <ActionBlock time={time} />
             )
           }
         }))
-      }
+      
 
       if (viewedUserId === 0) {
         baseColumns.splice(3, 0,
@@ -119,24 +112,7 @@ export default function Table({ error, loading }: Props) {
     [cars, cm, activeTrack]
   );
 
-  const handleDeleteLaptime = async (id: number) => {
-    setActionLoading(true)
-    toast.loading('Deleting lap time...')
-    const { data, error } = await deleteLapTime(id)
 
-    if (!data || error) {
-      setActionLoading(false)
-      toast.dismiss()
-      toast.error(error?.message || 'Failed to delete time.')
-      return
-    }
-
-    toast.dismiss()
-    deleteLapTimeState(id)
-    toast.success('Laptime deleted successfully!')
-    setActionLoading(false)
-
-  }
 
 
 
