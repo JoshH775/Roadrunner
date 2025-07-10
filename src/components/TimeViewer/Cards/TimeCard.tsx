@@ -4,12 +4,8 @@ import PI from "../../PI";
 import dayjs, { duration } from "dayjs";
 import Pill from "../../UI/Pill";
 import { tracks } from "../../../tracks";
-import Button from "../../UI/Button";
-import { Trash2 } from "lucide-react";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { deleteLapTime } from "../../../supabase";
 import Username from "../Username";
+import ActionBlock from "../Table/ActionBlock";
 
 dayjs.extend(duration);
 
@@ -22,35 +18,12 @@ export default function TimeCard({ time, index }: Props) {
   const {
     cars,
     activeTrack,
-    user,
     viewedUserId,
-    deleteLapTime: deleteLapTimeState,
   } = useAppState();
 
   const track =
     tracks.find((t) => t.id === time.trackId)?.name || "Unknown Track";
 
-  const [actionLoading, setActionLoading] = useState(false);
-
-  const handleDeleteLaptime = async () => {
-    const id = time.id;
-    setActionLoading(true);
-    toast.loading("Deleting laptime...");
-
-    const { data, error } = await deleteLapTime(id);
-
-    toast.dismiss();
-
-    if (!data || error) {
-      toast.error("Failed to delete laptime.");
-      setActionLoading(false);
-      return;
-    }
-
-    deleteLapTimeState(id);
-    toast.success("Successfully deleted laptime.");
-    setActionLoading(false);
-  };
 
   return (
     <div className="w-full border rounded-lg border-gray-300 p-4">
@@ -64,19 +37,7 @@ export default function TimeCard({ time, index }: Props) {
                </span>
             )}
         </span>
-        <span className="flex items-center">
-          {viewedUserId === user?.id && (
-            <div className="flex items-center actions">
-              <Button
-                onClick={handleDeleteLaptime}
-                disabled={actionLoading}
-                icon={<Trash2 className="w-5 text-gray-500" />}
-                className="!p-1"
-              />
-            </div>
-          )}
           <PI pi={time.pi} />
-        </span>
       </span>
       <p className="font-semibold text-xl">
         {cars.find((car) => car.id === time.carId)?.name || "Unknown Car"}
@@ -88,7 +49,8 @@ export default function TimeCard({ time, index }: Props) {
         <p>{dayjs.unix(time.date).format("LL")}</p>
       </span>
 
-      <div className="flex items-center w-full mt-3 gap-1.5">
+      <div className="flex items-center w-full mt-3 justify-between">
+        <div className="flex items-center gap-1.5">
         <Pill
           trueText="Flying"
           falseText="Standing"
@@ -100,6 +62,8 @@ export default function TimeCard({ time, index }: Props) {
         falseText={time.tuneCode}
         bool={true}
         />}
+        </div>
+        <ActionBlock time={time} mobile/>
       </div>
     </div>
   );

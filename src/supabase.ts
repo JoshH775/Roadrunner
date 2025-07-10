@@ -284,7 +284,8 @@ export async function addLapTime(
       pi: lapTime.pi,
       date: lapTime.date,
       flying_lap: lapTime.flyingLap,
-      tune_code: lapTime.tuneCode
+      tune_code: lapTime.tuneCode,
+      video_url: lapTime.videoUrl
     };
 
     const { data, error } = await supabase
@@ -314,7 +315,8 @@ export async function addLapTime(
         date: data.date,
         pi: data.pi,
         flyingLap: data.flying_lap,
-        tuneCode: data.tune_code
+        tuneCode: data.tune_code,
+        videoUrl: data.video_url
       },
     };
   });
@@ -494,7 +496,8 @@ export async function fetchLapTimes(
       date: lap.date,
       pi: lap.pi,
       flyingLap: lap.flying_lap,
-      tuneCode: lap.tune_code
+      tuneCode: lap.tune_code,
+      videoUrl: lap.video_url
     }));
 
     lapTimeCache[cacheKey] = lapTimes;

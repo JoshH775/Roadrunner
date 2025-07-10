@@ -19,6 +19,7 @@ import duration from "dayjs/plugin/duration";
 import toast from "react-hot-toast";
 import { addLapTime, invalidateLapTimeCache } from "../../supabase";
 import Input from "../UI/Input";
+import { YoutubeIcon } from "../UI/CustomIcons";
 dayjs.extend(duration);
 
 export default function AddTimeModal({
@@ -48,7 +49,8 @@ export default function AddTimeModal({
     trackId: track.id,
     date: dayjs().unix(),
     flyingLap: false,
-    tuneCode: null
+    tuneCode: null,
+    videoUrl: null,
   });
 
   const minutesRef = useRef<HTMLInputElement>(null);
@@ -58,7 +60,8 @@ export default function AddTimeModal({
   const carRef = useRef<HTMLButtonElement>(null);
   const piRef = useRef<HTMLInputElement>(null);
   const timeInputRef = useRef<HTMLDivElement>(null);
-  const tuneCodeRef = useRef<HTMLInputElement>(null)
+  const tuneCodeRef = useRef<HTMLInputElement>(null);
+  const videoUrlRef = useRef<HTMLInputElement>(null);
 
   const onTrackSelect = (selectedTrack: Track) => {
     setTrack(selectedTrack);
@@ -142,7 +145,12 @@ export default function AddTimeModal({
       return
     }
 
-  
+    if (lapTime.videoUrl && !(/^https?:\/\/\S+\.\S+/.test(lapTime.videoUrl))) {
+      toast.error("Link must be a valid URL.")
+      videoUrlRef.current?.focus()
+      setLoading(false)
+      return
+    }
 
     toast.loading("Saving lap time...")
     const totalTime = dayjs
@@ -339,6 +347,17 @@ export default function AddTimeModal({
           onChange={(e) => onTuneCodeChange(e.target.value)}
           type="numeric"
           />
+
+          <Input
+            ref={videoUrlRef}
+            label="Video Link (optional)"
+            placeholder="Enter video URL..."
+            labelIcon={<YoutubeIcon className="w-4" />}
+            labelClassName="text-sm"
+            containerClassName="mt-2"
+            value={lapTime.videoUrl ?? ''}
+            onChange={(e) => setLapTime((prev) => ({...prev, videoUrl: e.target.value}))}
+            />
       </form>
     </Modal>
   );
