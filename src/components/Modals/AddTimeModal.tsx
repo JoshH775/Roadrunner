@@ -200,7 +200,7 @@ export default function AddTimeModal({
           variant: "primary",
           type: "submit",
           form: "add-lap-time-form",
-          disabled: loading,
+          disabled: loading || user?.id === 10,
         },
         {
           label: "Cancel",
